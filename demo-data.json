@@ -1,0 +1,1593 @@
+{
+  "city": "Москва",
+  "district": "Митино",
+  "checkedOn": "2026-11-22",
+  "sources": {
+    "cafeSnapshot": {
+      "label": "OSM · кафе и кофейни",
+      "date": "2026-11-17",
+      "osmBaseAt": "2026-11-17T14:07:34Z",
+      "localFile": "../ML/data/cafe_now.json",
+      "url": "https://www.openstreetmap.org/copyright",
+      "coverage": "Москва, административная область уровня 4. 5 380 объектов с amenity=cafe. Митино попадает в выгрузку."
+    },
+    "mitinoExtract": {
+      "label": "OSM · адреса и окружение",
+      "date": "2026-11-22",
+      "dateType": "Дата получения",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=37.341,55.839,37.371,55.853",
+      "bbox": [
+        37.341,
+        55.839,
+        37.371,
+        55.853
+      ],
+      "bboxOrder": [
+        "west",
+        "south",
+        "east",
+        "north"
+      ],
+      "coverage": "Выгрузка OSM API по прямоугольнику вокруг трёх адресов. Границы охватывают радиусы всех подсчётов и найденные ближайшие входы метро.",
+      "metroReferenceUrl": "https://www.mosmetro.ru/passengers/information/stations/91"
+    },
+    "historicalPoi": {
+      "label": "OSM · исходные выгрузки транспорта, офисов и магазинов",
+      "date": "2021-01-01",
+      "dateType": "Исторический срез",
+      "localFiles": [
+        "../ML/data/poi_transport.json",
+        "../ML/data/poi_office.json",
+        "../ML/data/poi_shops.json"
+      ],
+      "usedForScoring": false,
+      "coverage": "Москва, административная область уровня 4. Скрипт fetch_poi.py запрашивал срез на 01.01.2021; метка базы Overpass в файлах относится к 17.11.2026. Использована выгрузка по Митино от 22.11.2026."
+    }
+  },
+  "locations": [
+    {
+      "id": "A",
+      "address": "Митинская улица, 40",
+      "scenario": "У метро",
+      "coordinates": {
+        "lat": 55.8477563,
+        "lon": 37.359936
+      },
+      "addressSource": {
+        "source": "mitinoExtract",
+        "osm": "way/370920606",
+        "osmEditedAt": "2023-10-26T23:15:15Z",
+        "corroborationUrl": "https://yandex.com/maps/213/moscow/house/mitinskaya_ulitsa_40/Z04YdQFgSUMGQFtvfXR1dnRjZQ%3D%3D/",
+        "checkedOn": "2026-11-22"
+      },
+      "metrics": {
+        "competitors": {
+          "value": 10,
+          "source": "cafeSnapshot",
+          "objects": [
+            {
+              "osm": "node/9422399199",
+              "name": "Little Hanoi",
+              "coordinates": {
+                "lat": 55.8476731,
+                "lon": 37.3601514
+              },
+              "distanceM": 16.32,
+              "tags": {
+                "amenity": "cafe"
+              }
+            },
+            {
+              "osm": "node/3726574899",
+              "name": "Шоколадница",
+              "coordinates": {
+                "lat": 55.8476071,
+                "lon": 37.3602635
+              },
+              "distanceM": 26.33,
+              "tags": {
+                "amenity": "cafe"
+              }
+            },
+            {
+              "osm": "node/2800662563",
+              "name": "Штолле",
+              "coordinates": {
+                "lat": 55.8475453,
+                "lon": 37.3597025
+              },
+              "distanceM": 27.62,
+              "tags": {
+                "amenity": "cafe"
+              }
+            },
+            {
+              "osm": "node/8228476064",
+              "name": "Cinnabon",
+              "coordinates": {
+                "lat": 55.8469509,
+                "lon": 37.3576921
+              },
+              "distanceM": 166.26,
+              "tags": {
+                "amenity": "cafe"
+              }
+            },
+            {
+              "osm": "node/13066481483",
+              "name": "Surf Coffee",
+              "coordinates": {
+                "lat": 55.8469867,
+                "lon": 37.3576081
+              },
+              "distanceM": 168.64,
+              "tags": {
+                "amenity": "cafe"
+              }
+            },
+            {
+              "osm": "node/8215375749",
+              "name": "Чайхана",
+              "coordinates": {
+                "lat": 55.8463623,
+                "lon": 37.3627236
+              },
+              "distanceM": 233.04,
+              "tags": {
+                "amenity": "cafe"
+              }
+            },
+            {
+              "osm": "node/10576689448",
+              "name": "CofeFest",
+              "coordinates": {
+                "lat": 55.8496501,
+                "lon": 37.3617741
+              },
+              "distanceM": 239.81,
+              "tags": {
+                "amenity": "cafe"
+              }
+            },
+            {
+              "osm": "node/6171249264",
+              "name": "Волконский",
+              "coordinates": {
+                "lat": 55.8459696,
+                "lon": 37.3575598
+              },
+              "distanceM": 247.94,
+              "tags": {
+                "amenity": "cafe",
+                "shop": "bakery"
+              }
+            },
+            {
+              "osm": "node/12120726267",
+              "name": "Кулинарная лавка братьев Караваевых",
+              "coordinates": {
+                "lat": 55.8453323,
+                "lon": 37.3593803
+              },
+              "distanceM": 271.76,
+              "tags": {
+                "amenity": "cafe",
+                "shop": "food"
+              }
+            },
+            {
+              "osm": "node/12165690051",
+              "name": "Самарканд",
+              "coordinates": {
+                "lat": 55.8460378,
+                "lon": 37.3630536
+              },
+              "distanceM": 272.75,
+              "tags": {
+                "amenity": "cafe"
+              }
+            }
+          ]
+        },
+        "metro": {
+          "value": 83,
+          "source": "mitinoExtract",
+          "objects": [
+            {
+              "osm": "node/1208945643",
+              "name": "Митино",
+              "coordinates": {
+                "lat": 55.8470566,
+                "lon": 37.3603829
+              },
+              "distanceM": 82.65,
+              "tags": {
+                "ref": "7",
+                "railway": "subway_entrance"
+              },
+              "osmEditedAt": "2020-06-18T19:01:48Z"
+            }
+          ]
+        },
+        "stops": {
+          "value": 7,
+          "source": "mitinoExtract",
+          "objects": [
+            {
+              "osm": "node/1331052396",
+              "name": "Метро «Митино»",
+              "coordinates": {
+                "lat": 55.8472654,
+                "lon": 37.3595356
+              },
+              "distanceM": 60.04,
+              "tags": {
+                "highway": "bus_stop"
+              },
+              "osmEditedAt": "2023-09-17T00:03:31Z"
+            },
+            {
+              "osm": "node/1158869393",
+              "name": "Метро «Митино»",
+              "coordinates": {
+                "lat": 55.8473208,
+                "lon": 37.3611919
+              },
+              "distanceM": 92.15,
+              "tags": {
+                "highway": "bus_stop"
+              },
+              "osmEditedAt": "2023-09-17T00:03:31Z"
+            },
+            {
+              "osm": "node/1158878829",
+              "name": "Метро «Митино»",
+              "coordinates": {
+                "lat": 55.8471643,
+                "lon": 37.3618643
+              },
+              "distanceM": 137.2,
+              "tags": {
+                "highway": "bus_stop"
+              },
+              "osmEditedAt": "2023-09-17T00:03:31Z"
+            },
+            {
+              "osm": "node/1159036662",
+              "name": "Метро «Митино»",
+              "coordinates": {
+                "lat": 55.8462068,
+                "lon": 37.361556
+              },
+              "distanceM": 199.78,
+              "tags": {
+                "highway": "bus_stop"
+              },
+              "osmEditedAt": "2023-09-17T00:03:31Z"
+            },
+            {
+              "osm": "node/1158878809",
+              "name": "Метро «Митино»",
+              "coordinates": {
+                "lat": 55.8459025,
+                "lon": 37.359852
+              },
+              "distanceM": 206.2,
+              "tags": {
+                "highway": "bus_stop"
+              },
+              "osmEditedAt": "2023-09-17T00:03:31Z"
+            },
+            {
+              "osm": "node/1158869392",
+              "name": "Метро «Митино»",
+              "coordinates": {
+                "lat": 55.8459687,
+                "lon": 37.3590136
+              },
+              "distanceM": 206.94,
+              "tags": {
+                "highway": "bus_stop"
+              },
+              "osmEditedAt": "2023-09-17T00:03:31Z"
+            },
+            {
+              "osm": "node/2136003282",
+              "name": "Метро «Митино»",
+              "coordinates": {
+                "lat": 55.8456581,
+                "lon": 37.3585119
+              },
+              "distanceM": 249.67,
+              "tags": {
+                "highway": "bus_stop"
+              },
+              "osmEditedAt": "2023-09-17T00:03:31Z"
+            }
+          ]
+        },
+        "offices": {
+          "value": 15,
+          "source": "mitinoExtract",
+          "objects": [
+            {
+              "osm": "node/8938930218",
+              "name": "СДЭК",
+              "coordinates": {
+                "lat": 55.8483537,
+                "lon": 37.3597786
+              },
+              "distanceM": 67.15,
+              "tags": {
+                "amenity": "post_office",
+                "office": "logistics"
+              },
+              "osmEditedAt": "2026-06-09T21:11:19Z"
+            },
+            {
+              "osm": "node/6966408909",
+              "name": "ПЭК: Easyway",
+              "coordinates": {
+                "lat": 55.848296,
+                "lon": 37.359423
+              },
+              "distanceM": 68.02,
+              "tags": {
+                "office": "logistics"
+              },
+              "osmEditedAt": "2024-07-22T13:24:53Z"
+            },
+            {
+              "osm": "node/6208474819",
+              "name": "Пересвет",
+              "coordinates": {
+                "lat": 55.8479478,
+                "lon": 37.3586789
+              },
+              "distanceM": 81.31,
+              "tags": {
+                "office": "lawyer"
+              },
+              "osmEditedAt": "2022-02-23T17:12:13Z"
+            },
+            {
+              "osm": "node/7811082977",
+              "name": null,
+              "coordinates": {
+                "lat": 55.8485374,
+                "lon": 37.3589578
+              },
+              "distanceM": 106.17,
+              "tags": {
+                "office": "political_party"
+              },
+              "osmEditedAt": "2020-08-13T22:01:39Z"
+            },
+            {
+              "osm": "node/3813865704",
+              "name": null,
+              "coordinates": {
+                "lat": 55.8481736,
+                "lon": 37.3580481
+              },
+              "distanceM": 126.66,
+              "tags": {
+                "office": "police"
+              },
+              "osmEditedAt": "2015-11-02T14:14:14Z"
+            },
+            {
+              "osm": "node/10188397217",
+              "name": "Packman Agency",
+              "coordinates": {
+                "lat": 55.8464904,
+                "lon": 37.3621612
+              },
+              "distanceM": 197.76,
+              "tags": {
+                "office": "company"
+              },
+              "osmEditedAt": "2023-10-26T23:15:06Z"
+            },
+            {
+              "osm": "node/8409929531",
+              "name": "Yota",
+              "coordinates": {
+                "lat": 55.8462358,
+                "lon": 37.358125
+              },
+              "distanceM": 203.39,
+              "tags": {
+                "office": "telecommunication"
+              },
+              "osmEditedAt": "2024-04-08T11:05:07Z"
+            },
+            {
+              "osm": "node/6427687082",
+              "name": "Инком",
+              "coordinates": {
+                "lat": 55.8477152,
+                "lon": 37.3561174
+              },
+              "distanceM": 238.42,
+              "tags": {
+                "office": "estate_agent"
+              },
+              "osmEditedAt": "2019-04-25T09:51:29Z"
+            },
+            {
+              "osm": "node/7811071969",
+              "name": "ОДС № 542 ГБУ \"Жилищник района Митино\"",
+              "coordinates": {
+                "lat": 55.8490847,
+                "lon": 37.3629771
+              },
+              "distanceM": 240.53,
+              "tags": {
+                "office": "property_management"
+              },
+              "osmEditedAt": "2020-08-13T22:01:39Z"
+            },
+            {
+              "osm": "node/9820136833",
+              "name": "Капитал Медицинское Страхование",
+              "coordinates": {
+                "lat": 55.8455408,
+                "lon": 37.3602104
+              },
+              "distanceM": 246.95,
+              "tags": {
+                "office": "insurance"
+              },
+              "osmEditedAt": "2022-09-09T23:05:09Z"
+            },
+            {
+              "osm": "node/6427690107",
+              "name": "Ингосстрах-М",
+              "coordinates": {
+                "lat": 55.8462674,
+                "lon": 37.3565519
+              },
+              "distanceM": 268.4,
+              "tags": {
+                "office": "insurance"
+              },
+              "osmEditedAt": "2019-04-25T09:51:29Z"
+            },
+            {
+              "osm": "node/513758924",
+              "name": "Управа района Митино",
+              "coordinates": {
+                "lat": 55.8479433,
+                "lon": 37.3553434
+              },
+              "distanceM": 287.44,
+              "tags": {
+                "office": "government"
+              },
+              "osmEditedAt": "2023-08-22T04:46:19Z"
+            },
+            {
+              "osm": "node/4198450445",
+              "name": "ОДС №535/536 ГБУ г.Москвы \"Жилищник района Митино\"",
+              "coordinates": {
+                "lat": 55.8475993,
+                "lon": 37.3544496
+              },
+              "distanceM": 342.93,
+              "tags": {
+                "office": "property_management"
+              },
+              "osmEditedAt": "2019-04-25T20:08:48Z"
+            },
+            {
+              "osm": "node/6454313323",
+              "name": "ОДС № 539",
+              "coordinates": {
+                "lat": 55.8444762,
+                "lon": 37.3622221
+              },
+              "distanceM": 391.66,
+              "tags": {
+                "office": "property_management"
+              },
+              "osmEditedAt": "2026-06-18T17:48:13Z"
+            },
+            {
+              "osm": "node/3760511895",
+              "name": "Ингосстрах",
+              "coordinates": {
+                "lat": 55.8516244,
+                "lon": 37.3628084
+              },
+              "distanceM": 465.99,
+              "tags": {
+                "office": "insurance"
+              },
+              "osmEditedAt": "2021-07-25T20:33:56Z"
+            }
+          ]
+        },
+        "attractors": {
+          "value": 13,
+          "source": "mitinoExtract",
+          "objects": [
+            {
+              "osm": "way/370920606",
+              "name": "Торговый центр \"Митино\"",
+              "coordinates": {
+                "lat": 55.8477563,
+                "lon": 37.359936
+              },
+              "distanceM": 0.0,
+              "tags": {
+                "shop": "mall"
+              },
+              "osmEditedAt": "2023-10-26T23:15:15Z"
+            },
+            {
+              "osm": "node/4037292821",
+              "name": "Стандарт",
+              "coordinates": {
+                "lat": 55.8477225,
+                "lon": 37.3602043
+              },
+              "distanceM": 17.16,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2024-09-24T07:40:40Z"
+            },
+            {
+              "osm": "way/50075794",
+              "name": null,
+              "coordinates": {
+                "lat": 55.8481925,
+                "lon": 37.3595866
+              },
+              "distanceM": 53.18,
+              "tags": {
+                "shop": "mall"
+              },
+              "osmEditedAt": "2024-11-13T03:32:58Z"
+            },
+            {
+              "osm": "way/31543763",
+              "name": "Торговый центр \"Ковчег\"",
+              "coordinates": {
+                "lat": 55.8467744,
+                "lon": 37.3620252
+              },
+              "distanceM": 170.09,
+              "tags": {
+                "shop": "mall"
+              },
+              "osmEditedAt": "2024-09-09T14:31:05Z"
+            },
+            {
+              "osm": "node/8896016219",
+              "name": "Fitnation Митино",
+              "coordinates": {
+                "lat": 55.8468494,
+                "lon": 37.3576194
+              },
+              "distanceM": 176.3,
+              "tags": {
+                "leisure": "fitness_centre"
+              },
+              "osmEditedAt": "2023-09-17T22:42:45Z"
+            },
+            {
+              "osm": "node/5260931125",
+              "name": "Пятёрочка",
+              "coordinates": {
+                "lat": 55.84852,
+                "lon": 37.3626231
+              },
+              "distanceM": 188.01,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2024-09-24T07:40:40Z"
+            },
+            {
+              "osm": "node/14387106445",
+              "name": "Чижик",
+              "coordinates": {
+                "lat": 55.8469446,
+                "lon": 37.3571695
+              },
+              "distanceM": 194.86,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2026-11-17T15:09:49Z"
+            },
+            {
+              "osm": "node/679720372",
+              "name": "Перекресток",
+              "coordinates": {
+                "lat": 55.8462378,
+                "lon": 37.3577058
+              },
+              "distanceM": 218.84,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2024-09-24T07:40:40Z"
+            },
+            {
+              "osm": "relation/5652345",
+              "name": "Торгово-развлекательный центр \"Ладья\"",
+              "coordinates": {
+                "lat": 55.8460686,
+                "lon": 37.3581319
+              },
+              "distanceM": 218.86,
+              "tags": {
+                "shop": "mall"
+              },
+              "osmEditedAt": "2023-09-17T22:43:35Z"
+            },
+            {
+              "osm": "node/3827619047",
+              "name": "Пятёрочка",
+              "coordinates": {
+                "lat": 55.8464911,
+                "lon": 37.3567889
+              },
+              "distanceM": 241.64,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2024-09-24T07:40:40Z"
+            },
+            {
+              "osm": "node/12120726265",
+              "name": "Медси",
+              "coordinates": {
+                "lat": 55.8452253,
+                "lon": 37.3596954
+              },
+              "distanceM": 281.84,
+              "tags": {
+                "amenity": "clinic"
+              },
+              "osmEditedAt": "2024-08-19T17:31:48Z"
+            },
+            {
+              "osm": "node/10814387620",
+              "name": "Да!",
+              "coordinates": {
+                "lat": 55.845232,
+                "lon": 37.3595098
+              },
+              "distanceM": 281.95,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2024-09-24T07:40:40Z"
+            },
+            {
+              "osm": "node/14387106444",
+              "name": "Пятёрочка",
+              "coordinates": {
+                "lat": 55.8497819,
+                "lon": 37.3568275
+              },
+              "distanceM": 297.29,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2026-11-17T15:09:49Z"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "B",
+      "address": "Дубравная улица, 36",
+      "scenario": "По пути к домам",
+      "coordinates": {
+        "lat": 55.8455882,
+        "lon": 37.3556392
+      },
+      "addressSource": {
+        "source": "mitinoExtract",
+        "osm": "way/31543627",
+        "osmEditedAt": "2024-04-24T09:12:09Z",
+        "corroborationUrl": "https://www.mos.ru/upload/documents/files/1934/Prilojenie_4.pdf#page=178",
+        "checkedOn": "2026-11-22"
+      },
+      "metrics": {
+        "competitors": {
+          "value": 4,
+          "source": "cafeSnapshot",
+          "objects": [
+            {
+              "osm": "node/6171249264",
+              "name": "Волконский",
+              "coordinates": {
+                "lat": 55.8459696,
+                "lon": 37.3575598
+              },
+              "distanceM": 127.18,
+              "tags": {
+                "amenity": "cafe",
+                "shop": "bakery"
+              }
+            },
+            {
+              "osm": "node/13066481483",
+              "name": "Surf Coffee",
+              "coordinates": {
+                "lat": 55.8469867,
+                "lon": 37.3576081
+              },
+              "distanceM": 198.22,
+              "tags": {
+                "amenity": "cafe"
+              }
+            },
+            {
+              "osm": "node/8228476064",
+              "name": "Cinnabon",
+              "coordinates": {
+                "lat": 55.8469509,
+                "lon": 37.3576921
+              },
+              "distanceM": 198.45,
+              "tags": {
+                "amenity": "cafe"
+              }
+            },
+            {
+              "osm": "node/12120726267",
+              "name": "Кулинарная лавка братьев Караваевых",
+              "coordinates": {
+                "lat": 55.8453323,
+                "lon": 37.3593803
+              },
+              "distanceM": 235.28,
+              "tags": {
+                "amenity": "cafe",
+                "shop": "food"
+              }
+            }
+          ]
+        },
+        "metro": {
+          "value": 245,
+          "source": "mitinoExtract",
+          "objects": [
+            {
+              "osm": "node/1208945655",
+              "name": "Митино",
+              "coordinates": {
+                "lat": 55.846215,
+                "lon": 37.3594054
+              },
+              "distanceM": 245.23,
+              "tags": {
+                "ref": "3",
+                "railway": "subway_entrance"
+              },
+              "osmEditedAt": "2020-06-18T19:01:40Z"
+            }
+          ]
+        },
+        "stops": {
+          "value": 5,
+          "source": "mitinoExtract",
+          "objects": [
+            {
+              "osm": "node/2136003282",
+              "name": "Метро «Митино»",
+              "coordinates": {
+                "lat": 55.8456581,
+                "lon": 37.3585119
+              },
+              "distanceM": 179.5,
+              "tags": {
+                "highway": "bus_stop"
+              },
+              "osmEditedAt": "2023-09-17T00:03:31Z"
+            },
+            {
+              "osm": "node/1158869392",
+              "name": "Метро «Митино»",
+              "coordinates": {
+                "lat": 55.8459687,
+                "lon": 37.3590136
+              },
+              "distanceM": 214.86,
+              "tags": {
+                "highway": "bus_stop"
+              },
+              "osmEditedAt": "2023-09-17T00:03:31Z"
+            },
+            {
+              "osm": "node/1158869398",
+              "name": "Улица Барышиха",
+              "coordinates": {
+                "lat": 55.8433161,
+                "lon": 37.3548048
+              },
+              "distanceM": 257.96,
+              "tags": {
+                "highway": "bus_stop"
+              },
+              "osmEditedAt": "2023-09-17T00:03:31Z"
+            },
+            {
+              "osm": "node/1158878809",
+              "name": "Метро «Митино»",
+              "coordinates": {
+                "lat": 55.8459025,
+                "lon": 37.359852
+              },
+              "distanceM": 265.31,
+              "tags": {
+                "highway": "bus_stop"
+              },
+              "osmEditedAt": "2023-09-17T00:03:31Z"
+            },
+            {
+              "osm": "node/1158878815",
+              "name": "Улица Барышиха",
+              "coordinates": {
+                "lat": 55.8429683,
+                "lon": 37.3551953
+              },
+              "distanceM": 292.64,
+              "tags": {
+                "highway": "bus_stop"
+              },
+              "osmEditedAt": "2023-09-17T00:03:31Z"
+            }
+          ]
+        },
+        "offices": {
+          "value": 17,
+          "source": "mitinoExtract",
+          "objects": [
+            {
+              "osm": "node/6427690107",
+              "name": "Ингосстрах-М",
+              "coordinates": {
+                "lat": 55.8462674,
+                "lon": 37.3565519
+              },
+              "distanceM": 94.61,
+              "tags": {
+                "office": "insurance"
+              },
+              "osmEditedAt": "2019-04-25T09:51:29Z"
+            },
+            {
+              "osm": "node/8409929531",
+              "name": "Yota",
+              "coordinates": {
+                "lat": 55.8462358,
+                "lon": 37.358125
+              },
+              "distanceM": 171.08,
+              "tags": {
+                "office": "telecommunication"
+              },
+              "osmEditedAt": "2024-04-08T11:05:07Z"
+            },
+            {
+              "osm": "node/6145641354",
+              "name": "ОДС № 92 ГБУ \"Жилищник района Митино\"",
+              "coordinates": {
+                "lat": 55.8440937,
+                "lon": 37.3533949
+              },
+              "distanceM": 217.36,
+              "tags": {
+                "office": "property_management"
+              },
+              "osmEditedAt": "2018-12-18T17:02:42Z"
+            },
+            {
+              "osm": "node/7369268550",
+              "name": "СДЭК",
+              "coordinates": {
+                "lat": 55.8437157,
+                "lon": 37.3546348
+              },
+              "distanceM": 217.45,
+              "tags": {
+                "amenity": "post_office",
+                "office": "logistics"
+              },
+              "osmEditedAt": "2024-06-17T11:42:43Z"
+            },
+            {
+              "osm": "node/4198450445",
+              "name": "ОДС №535/536 ГБУ г.Москвы \"Жилищник района Митино\"",
+              "coordinates": {
+                "lat": 55.8475993,
+                "lon": 37.3544496
+              },
+              "distanceM": 235.63,
+              "tags": {
+                "office": "property_management"
+              },
+              "osmEditedAt": "2019-04-25T20:08:48Z"
+            },
+            {
+              "osm": "node/6427687082",
+              "name": "Инком",
+              "coordinates": {
+                "lat": 55.8477152,
+                "lon": 37.3561174
+              },
+              "distanceM": 238.39,
+              "tags": {
+                "office": "estate_agent"
+              },
+              "osmEditedAt": "2019-04-25T09:51:29Z"
+            },
+            {
+              "osm": "node/513758924",
+              "name": "Управа района Митино",
+              "coordinates": {
+                "lat": 55.8479433,
+                "lon": 37.3553434
+              },
+              "distanceM": 262.53,
+              "tags": {
+                "office": "government"
+              },
+              "osmEditedAt": "2023-08-22T04:46:19Z"
+            },
+            {
+              "osm": "node/9820136833",
+              "name": "Капитал Медицинское Страхование",
+              "coordinates": {
+                "lat": 55.8455408,
+                "lon": 37.3602104
+              },
+              "distanceM": 285.42,
+              "tags": {
+                "office": "insurance"
+              },
+              "osmEditedAt": "2022-09-09T23:05:09Z"
+            },
+            {
+              "osm": "node/6208474819",
+              "name": "Пересвет",
+              "coordinates": {
+                "lat": 55.8479478,
+                "lon": 37.3586789
+              },
+              "distanceM": 323.8,
+              "tags": {
+                "office": "lawyer"
+              },
+              "osmEditedAt": "2022-02-23T17:12:13Z"
+            },
+            {
+              "osm": "node/3813865704",
+              "name": null,
+              "coordinates": {
+                "lat": 55.8481736,
+                "lon": 37.3580481
+              },
+              "distanceM": 324.44,
+              "tags": {
+                "office": "police"
+              },
+              "osmEditedAt": "2015-11-02T14:14:14Z"
+            },
+            {
+              "osm": "node/6429198018",
+              "name": "Согласие",
+              "coordinates": {
+                "lat": 55.8471197,
+                "lon": 37.3511633
+              },
+              "distanceM": 327.22,
+              "tags": {
+                "office": "insurance"
+              },
+              "osmEditedAt": "2023-10-27T18:10:25Z"
+            },
+            {
+              "osm": "node/6966408909",
+              "name": "ПЭК: Easyway",
+              "coordinates": {
+                "lat": 55.848296,
+                "lon": 37.359423
+              },
+              "distanceM": 382.69,
+              "tags": {
+                "office": "logistics"
+              },
+              "osmEditedAt": "2024-07-22T13:24:53Z"
+            },
+            {
+              "osm": "node/6511569325",
+              "name": "ОДС № 95 ГБУ \"Жилищник района Митино\"",
+              "coordinates": {
+                "lat": 55.8434251,
+                "lon": 37.3507731
+              },
+              "distanceM": 387.48,
+              "tags": {
+                "office": "property_management"
+              },
+              "osmEditedAt": "2024-11-05T17:23:22Z"
+            },
+            {
+              "osm": "node/7811082977",
+              "name": null,
+              "coordinates": {
+                "lat": 55.8485374,
+                "lon": 37.3589578
+              },
+              "distanceM": 387.89,
+              "tags": {
+                "office": "political_party"
+              },
+              "osmEditedAt": "2020-08-13T22:01:39Z"
+            },
+            {
+              "osm": "node/8938930218",
+              "name": "СДЭК",
+              "coordinates": {
+                "lat": 55.8483537,
+                "lon": 37.3597786
+              },
+              "distanceM": 401.67,
+              "tags": {
+                "amenity": "post_office",
+                "office": "logistics"
+              },
+              "osmEditedAt": "2026-06-09T21:11:19Z"
+            },
+            {
+              "osm": "node/10188397217",
+              "name": "Packman Agency",
+              "coordinates": {
+                "lat": 55.8464904,
+                "lon": 37.3621612
+              },
+              "distanceM": 419.33,
+              "tags": {
+                "office": "company"
+              },
+              "osmEditedAt": "2023-10-26T23:15:06Z"
+            },
+            {
+              "osm": "node/6454313323",
+              "name": "ОДС № 539",
+              "coordinates": {
+                "lat": 55.8444762,
+                "lon": 37.3622221
+              },
+              "distanceM": 429.16,
+              "tags": {
+                "office": "property_management"
+              },
+              "osmEditedAt": "2026-06-18T17:48:13Z"
+            }
+          ]
+        },
+        "attractors": {
+          "value": 11,
+          "source": "mitinoExtract",
+          "objects": [
+            {
+              "osm": "node/6096051237",
+              "name": "Ашан",
+              "coordinates": {
+                "lat": 55.8445672,
+                "lon": 37.3563789
+              },
+              "distanceM": 122.56,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2025-08-12T18:16:46Z"
+            },
+            {
+              "osm": "node/3827619047",
+              "name": "Пятёрочка",
+              "coordinates": {
+                "lat": 55.8464911,
+                "lon": 37.3567889
+              },
+              "distanceM": 123.41,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2024-09-24T07:40:40Z"
+            },
+            {
+              "osm": "node/679720372",
+              "name": "Перекресток",
+              "coordinates": {
+                "lat": 55.8462378,
+                "lon": 37.3577058
+              },
+              "distanceM": 147.86,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2024-09-24T07:40:40Z"
+            },
+            {
+              "osm": "relation/5652345",
+              "name": "Торгово-развлекательный центр \"Ладья\"",
+              "coordinates": {
+                "lat": 55.8460686,
+                "lon": 37.3581319
+              },
+              "distanceM": 164.53,
+              "tags": {
+                "shop": "mall"
+              },
+              "osmEditedAt": "2023-09-17T22:43:35Z"
+            },
+            {
+              "osm": "node/14387106445",
+              "name": "Чижик",
+              "coordinates": {
+                "lat": 55.8469446,
+                "lon": 37.3571695
+              },
+              "distanceM": 178.53,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2026-11-17T15:09:49Z"
+            },
+            {
+              "osm": "node/8896016219",
+              "name": "Fitnation Митино",
+              "coordinates": {
+                "lat": 55.8468494,
+                "lon": 37.3576194
+              },
+              "distanceM": 186.94,
+              "tags": {
+                "leisure": "fitness_centre"
+              },
+              "osmEditedAt": "2023-09-17T22:42:45Z"
+            },
+            {
+              "osm": "node/3827619043",
+              "name": "Пятёрочка",
+              "coordinates": {
+                "lat": 55.8436816,
+                "lon": 37.3549609
+              },
+              "distanceM": 216.19,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2026-07-17T12:54:35Z"
+            },
+            {
+              "osm": "node/6117962204",
+              "name": "Чижик",
+              "coordinates": {
+                "lat": 55.8435384,
+                "lon": 37.3546792
+              },
+              "distanceM": 235.68,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2025-08-12T20:01:58Z"
+            },
+            {
+              "osm": "node/10814387620",
+              "name": "Да!",
+              "coordinates": {
+                "lat": 55.845232,
+                "lon": 37.3595098
+              },
+              "distanceM": 244.86,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2024-09-24T07:40:40Z"
+            },
+            {
+              "osm": "node/12120726265",
+              "name": "Медси",
+              "coordinates": {
+                "lat": 55.8452253,
+                "lon": 37.3596954
+              },
+              "distanceM": 256.42,
+              "tags": {
+                "amenity": "clinic"
+              },
+              "osmEditedAt": "2024-08-19T17:31:48Z"
+            },
+            {
+              "osm": "node/6429198417",
+              "name": "Твой доктор",
+              "coordinates": {
+                "lat": 55.8475677,
+                "lon": 37.3534566
+              },
+              "distanceM": 258.87,
+              "tags": {
+                "amenity": "clinic"
+              },
+              "osmEditedAt": "2023-05-06T14:25:30Z"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "C",
+      "address": "Дубравная улица, 40, корп. 2",
+      "scenario": "Внутри квартала",
+      "coordinates": {
+        "lat": 55.8450929,
+        "lon": 37.3525324
+      },
+      "addressSource": {
+        "source": "mitinoExtract",
+        "osm": "way/31544232",
+        "osmEditedAt": "2024-04-24T09:14:28Z",
+        "corroborationUrl": "https://www.mos.ru/upload/documents/files/1934/Prilojenie_4.pdf#page=178",
+        "checkedOn": "2026-11-22"
+      },
+      "metrics": {
+        "competitors": {
+          "value": 0,
+          "source": "cafeSnapshot",
+          "objects": []
+        },
+        "metro": {
+          "value": 447,
+          "source": "mitinoExtract",
+          "objects": [
+            {
+              "osm": "node/1208945655",
+              "name": "Митино",
+              "coordinates": {
+                "lat": 55.846215,
+                "lon": 37.3594054
+              },
+              "distanceM": 446.84,
+              "tags": {
+                "ref": "3",
+                "railway": "subway_entrance"
+              },
+              "osmEditedAt": "2020-06-18T19:01:40Z"
+            }
+          ]
+        },
+        "stops": {
+          "value": 4,
+          "source": "mitinoExtract",
+          "objects": [
+            {
+              "osm": "node/1158869398",
+              "name": "Улица Барышиха",
+              "coordinates": {
+                "lat": 55.8433161,
+                "lon": 37.3548048
+              },
+              "distanceM": 243.23,
+              "tags": {
+                "highway": "bus_stop"
+              },
+              "osmEditedAt": "2023-09-17T00:03:31Z"
+            },
+            {
+              "osm": "node/1340065054",
+              "name": "Дубравная улица",
+              "coordinates": {
+                "lat": 55.8428696,
+                "lon": 37.3533869
+              },
+              "distanceM": 252.91,
+              "tags": {
+                "highway": "bus_stop"
+              },
+              "osmEditedAt": "2023-09-17T00:03:31Z"
+            },
+            {
+              "osm": "node/1340049328",
+              "name": "3-й Митинский переулок",
+              "coordinates": {
+                "lat": 55.8453231,
+                "lon": 37.3479813
+              },
+              "distanceM": 285.27,
+              "tags": {
+                "highway": "bus_stop"
+              },
+              "osmEditedAt": "2023-09-17T00:03:31Z"
+            },
+            {
+              "osm": "node/1158878815",
+              "name": "Улица Барышиха",
+              "coordinates": {
+                "lat": 55.8429683,
+                "lon": 37.3551953
+              },
+              "distanceM": 288.88,
+              "tags": {
+                "highway": "bus_stop"
+              },
+              "osmEditedAt": "2023-09-17T00:03:31Z"
+            }
+          ]
+        },
+        "offices": {
+          "value": 14,
+          "source": "mitinoExtract",
+          "objects": [
+            {
+              "osm": "node/6145641354",
+              "name": "ОДС № 92 ГБУ \"Жилищник района Митино\"",
+              "coordinates": {
+                "lat": 55.8440937,
+                "lon": 37.3533949
+              },
+              "distanceM": 123.47,
+              "tags": {
+                "office": "property_management"
+              },
+              "osmEditedAt": "2018-12-18T17:02:42Z"
+            },
+            {
+              "osm": "node/7369268550",
+              "name": "СДЭК",
+              "coordinates": {
+                "lat": 55.8437157,
+                "lon": 37.3546348
+              },
+              "distanceM": 201.69,
+              "tags": {
+                "amenity": "post_office",
+                "office": "logistics"
+              },
+              "osmEditedAt": "2024-06-17T11:42:43Z"
+            },
+            {
+              "osm": "node/6511569325",
+              "name": "ОДС № 95 ГБУ \"Жилищник района Митино\"",
+              "coordinates": {
+                "lat": 55.8434251,
+                "lon": 37.3507731
+              },
+              "distanceM": 215.54,
+              "tags": {
+                "office": "property_management"
+              },
+              "osmEditedAt": "2024-11-05T17:23:22Z"
+            },
+            {
+              "osm": "node/6429198018",
+              "name": "Согласие",
+              "coordinates": {
+                "lat": 55.8471197,
+                "lon": 37.3511633
+              },
+              "distanceM": 241.03,
+              "tags": {
+                "office": "insurance"
+              },
+              "osmEditedAt": "2023-10-27T18:10:25Z"
+            },
+            {
+              "osm": "node/6427690107",
+              "name": "Ингосстрах-М",
+              "coordinates": {
+                "lat": 55.8462674,
+                "lon": 37.3565519
+              },
+              "distanceM": 282.88,
+              "tags": {
+                "office": "insurance"
+              },
+              "osmEditedAt": "2019-04-25T09:51:29Z"
+            },
+            {
+              "osm": "node/4198450445",
+              "name": "ОДС №535/536 ГБУ г.Москвы \"Жилищник района Митино\"",
+              "coordinates": {
+                "lat": 55.8475993,
+                "lon": 37.3544496
+              },
+              "distanceM": 303.31,
+              "tags": {
+                "office": "property_management"
+              },
+              "osmEditedAt": "2019-04-25T20:08:48Z"
+            },
+            {
+              "osm": "node/513758924",
+              "name": "Управа района Митино",
+              "coordinates": {
+                "lat": 55.8479433,
+                "lon": 37.3553434
+              },
+              "distanceM": 362.29,
+              "tags": {
+                "office": "government"
+              },
+              "osmEditedAt": "2023-08-22T04:46:19Z"
+            },
+            {
+              "osm": "node/6427687082",
+              "name": "Инком",
+              "coordinates": {
+                "lat": 55.8477152,
+                "lon": 37.3561174
+              },
+              "distanceM": 367.57,
+              "tags": {
+                "office": "estate_agent"
+              },
+              "osmEditedAt": "2019-04-25T09:51:29Z"
+            },
+            {
+              "osm": "node/8409929531",
+              "name": "Yota",
+              "coordinates": {
+                "lat": 55.8462358,
+                "lon": 37.358125
+              },
+              "distanceM": 371.54,
+              "tags": {
+                "office": "telecommunication"
+              },
+              "osmEditedAt": "2024-04-08T11:05:07Z"
+            },
+            {
+              "osm": "node/6142813703",
+              "name": "ОДС № 94 ГБУ \"Жилищник района Митино\"",
+              "coordinates": {
+                "lat": 55.8450243,
+                "lon": 37.3461905
+              },
+              "distanceM": 395.99,
+              "tags": {
+                "office": "property_management"
+              },
+              "osmEditedAt": "2023-05-12T15:30:49Z"
+            },
+            {
+              "osm": "node/6907090939",
+              "name": "Мой дом",
+              "coordinates": {
+                "lat": 55.8426882,
+                "lon": 37.3464371
+              },
+              "distanceM": 465.08,
+              "tags": {
+                "office": "property_management"
+              },
+              "osmEditedAt": "2022-02-16T16:33:43Z"
+            },
+            {
+              "osm": "node/9820136833",
+              "name": "Капитал Медицинское Страхование",
+              "coordinates": {
+                "lat": 55.8455408,
+                "lon": 37.3602104
+              },
+              "distanceM": 481.9,
+              "tags": {
+                "office": "insurance"
+              },
+              "osmEditedAt": "2022-09-09T23:05:09Z"
+            },
+            {
+              "osm": "node/3813865704",
+              "name": null,
+              "coordinates": {
+                "lat": 55.8481736,
+                "lon": 37.3580481
+              },
+              "distanceM": 485.7,
+              "tags": {
+                "office": "police"
+              },
+              "osmEditedAt": "2015-11-02T14:14:14Z"
+            },
+            {
+              "osm": "node/6208474819",
+              "name": "Пересвет",
+              "coordinates": {
+                "lat": 55.8479478,
+                "lon": 37.3586789
+              },
+              "distanceM": 498.0,
+              "tags": {
+                "office": "lawyer"
+              },
+              "osmEditedAt": "2022-02-23T17:12:13Z"
+            }
+          ]
+        },
+        "attractors": {
+          "value": 5,
+          "source": "mitinoExtract",
+          "objects": [
+            {
+              "osm": "node/6085432641",
+              "name": "Гиацинт Н",
+              "coordinates": {
+                "lat": 55.8445766,
+                "lon": 37.3506872
+              },
+              "distanceM": 128.71,
+              "tags": {
+                "amenity": "clinic"
+              },
+              "osmEditedAt": "2025-05-05T10:47:07Z"
+            },
+            {
+              "osm": "node/3827619043",
+              "name": "Пятёрочка",
+              "coordinates": {
+                "lat": 55.8436816,
+                "lon": 37.3549609
+              },
+              "distanceM": 218.2,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2026-07-17T12:54:35Z"
+            },
+            {
+              "osm": "node/6117962204",
+              "name": "Чижик",
+              "coordinates": {
+                "lat": 55.8435384,
+                "lon": 37.3546792
+              },
+              "distanceM": 218.72,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2025-08-12T20:01:58Z"
+            },
+            {
+              "osm": "node/6096051237",
+              "name": "Ашан",
+              "coordinates": {
+                "lat": 55.8445672,
+                "lon": 37.3563789
+              },
+              "distanceM": 247.15,
+              "tags": {
+                "shop": "supermarket"
+              },
+              "osmEditedAt": "2025-08-12T18:16:46Z"
+            },
+            {
+              "osm": "node/6429198417",
+              "name": "Твой доктор",
+              "coordinates": {
+                "lat": 55.8475677,
+                "lon": 37.3534566
+              },
+              "distanceM": 281.17,
+              "tags": {
+                "amenity": "clinic"
+              },
+              "osmEditedAt": "2023-05-06T14:25:30Z"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

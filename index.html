@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Сравните три адреса в Митино для кофейни навынос.">
+  <title>LOCACTION — сравнение локаций для кофейни</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.mjs"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="wordmark" href="./" aria-label="LOCACTION, главная"><span class="brand-mark" aria-hidden="true"></span>LOCACTION</a>
+      <span class="header-caption">Выбор локации для кофейни</span>
+    </div>
+  </header>
+  <main>
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="district">Москва / Митино</p>
+        <h1 id="hero-title">Где открыть<br>кофейню?</h1>
+        <p class="hero-description">Три адреса для кофейни навынос. Сравните, что есть рядом с каждым из них и как это влияет на оценку места.</p>
+        <button class="button primary" type="button" id="start" aria-controls="report">Попробовать на примере</button>
+        <p id="load-error" role="alert" hidden>Не удалось открыть данные. Нажмите кнопку ещё раз.</p>
+        <noscript><p>Включите JavaScript, чтобы открыть сравнительный отчёт.</p></noscript>
+      </div>
+      <figure class="scenario">
+        <div class="scenario-art" aria-hidden="true">
+          <img src="mitino.webp" alt="" width="1100" height="810">
+          <span class="map-title">От метро до квартала</span>
+          <span class="map-marker map-a pin pin-a">A</span>
+          <span class="map-marker map-b pin pin-b">B</span>
+          <span class="map-marker map-c pin pin-c">C</span>
+          <span class="map-metro"><span>М</span> Митино</span>
+        </div>
+        <figcaption>
+          <ul class="map-legend" aria-label="Расположение трёх адресов">
+            <li><span class="pin pin-a">A</span>У метро</li>
+            <li><span class="pin pin-b">B</span>По пути к домам</li>
+            <li><span class="pin pin-c">C</span>Внутри квартала</li>
+          </ul>
+          <small>Схема по данным <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a></small>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section id="report" class="report" aria-labelledby="report-title" hidden>
+      <div class="wrap">
+        <div class="report-header">
+          <div>
+            <p class="print-brand">LOCACTION</p>
+            <p id="report-place" class="district"></p>
+            <h2 id="report-title" tabindex="-1">Сравнение адресов</h2>
+            <p id="report-format" class="report-format"></p>
+          </div>
+          <button type="button" id="print" class="button secondary">Сохранить в PDF</button>
+        </div>
+
+        <section class="report-section ranking-section" aria-labelledby="ranking-title">
+          <div class="section-heading"><h3 id="ranking-title"></h3><span class="scale">Шкала 0–100</span></div>
+          <p id="coverage" class="coverage"></p>
+          <ol class="ranking" id="ranking"></ol>
+          <div id="exclusions" class="exclusions" hidden>
+            <h4>Исключённые факторы</h4>
+            <ul id="excluded-factors"></ul>
+          </div>
+        </section>
+
+        <section class="report-section explanation" aria-labelledby="tradeoffs-title">
+          <h3 id="tradeoffs-title">Почему такие места</h3>
+          <p id="leader-summary"></p>
+          <ul class="tradeoffs" id="tradeoffs"></ul>
+        </section>
+
+        <section class="report-section factors-section" aria-labelledby="factors-title">
+          <div class="section-heading"><h3 id="factors-title">Из чего сложился балл</h3></div>
+          <p class="section-note">Сверху — исходное значение, снизу — вклад в индекс. Нажмите на фактор, чтобы открыть детали.</p>
+          <table class="factors" aria-labelledby="factors-title">
+            <thead><tr id="factor-head"><th scope="col">Фактор и вес</th></tr></thead>
+            <tbody id="factor-body"></tbody>
+          </table>
+          <p class="fine-print" id="missing-rule"></p>
+          <p class="fine-print">Вклады округлены до десятых, итог рассчитан до округления вкладов.</p>
+        </section>
+
+        <section class="field-check" aria-labelledby="field-check-title">
+          <h3 id="field-check-title">Что проверить на месте</h3>
+          <ul>
+            <li>Посчитайте прохожих у нужного входа утром и вечером в будни.</li>
+            <li>Пройдите от метро до двери. Проверьте переходы, видимость вывески и соседей, которые продают кофе.</li>
+            <li>Уточните аренду, доступную мощность, воду и условия размещения вывески.</li>
+          </ul>
+        </section>
+
+        <section class="sources" aria-labelledby="sources-title">
+          <h3 id="sources-title">Данные и ограничения</h3>
+          <p id="sources-summary"></p>
+          <p>Расстояния измерены от центра здания. Ноль означает, что подходящих объектов в выгрузке не найдено. Веса и пороги заданы для демо. Поток людей и доступность помещений проверяются отдельно.</p>
+          <p><a href="https://www.openstreetmap.org/copyright">© участники OpenStreetMap, ODbL</a><span class="data-link"> · <a href="demo-data.json">Адреса, объекты и источники в JSON</a></span></p>
+        </section>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
