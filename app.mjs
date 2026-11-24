@@ -6,6 +6,19 @@ const reportTitle = document.querySelector('#report-title');
 const loadError = document.querySelector('#load-error');
 const decimal = new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const date = (iso) => iso.split('-').reverse().join('.');
+let demo;
+
+function loadDemo() {
+  demo ??= fetch(new URL('./demo-data.json', import.meta.url)).then(async (response) => {
+    if (!response.ok) throw new Error(`Demo data: HTTP ${response.status}`);
+    const data = await response.json();
+    return { data, comparison: compareLocations(data.locations) };
+  }).catch((error) => {
+    demo = undefined;
+    throw error;
+  });
+  return demo;
+}
 
 function element(tag, content, className) {
   const node = document.createElement(tag);
@@ -193,8 +206,7 @@ function renderTradeoffs(ranked) {
   }
 }
 
-function renderReport(data) {
-  const comparison = compareLocations(data.locations);
+function renderReport({ data, comparison }) {
   const { ranked, effectiveWeights } = comparison;
   const { cafeSnapshot, mitinoExtract } = data.sources;
   document.querySelector('#report-place').textContent = `${data.city}, район ${data.district}`;
@@ -214,9 +226,7 @@ start.addEventListener('click', async () => {
     loadError.hidden = true;
     start.setAttribute('aria-busy', 'true');
     try {
-      const response = await fetch('./demo-data.json');
-      if (!response.ok) throw new Error(`Demo data: HTTP ${response.status}`);
-      renderReport(await response.json());
+      renderReport(await loadDemo());
       report.hidden = false;
     } catch (error) {
       console.error(error);
@@ -233,3 +243,8 @@ start.addEventListener('click', async () => {
 });
 
 document.querySelector('#print').addEventListener('click', () => window.print());
+
+const mapPanel = document.querySelector('#location-map');
+import('./map/map.mjs').then(({ mountLocationMap }) => mountLocationMap(mapPanel, loadDemo)).catch(() => {
+  mapPanel.dataset.state = 'fallback';
+});

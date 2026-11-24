@@ -7,6 +7,7 @@
   <title>LOCACTION — сравнение локаций для кофейни</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="map/map.css">
   <script type="module" src="app.mjs"></script>
 </head>
 <body>
@@ -26,22 +27,53 @@
         <p id="load-error" role="alert" hidden>Не удалось открыть данные. Нажмите кнопку ещё раз.</p>
         <noscript><p>Включите JavaScript, чтобы открыть сравнительный отчёт.</p></noscript>
       </div>
-      <figure class="scenario">
-        <div class="scenario-art" aria-hidden="true">
-          <img src="mitino.webp" alt="" width="1100" height="810">
-          <span class="map-title">От метро до квартала</span>
-          <span class="map-marker map-a pin pin-a">A</span>
-          <span class="map-marker map-b pin pin-b">B</span>
-          <span class="map-marker map-c pin pin-c">C</span>
-          <span class="map-metro"><span>М</span> Митино</span>
+      <figure class="scenario map-card" id="location-map" data-state="loading">
+        <div class="map-toolbar">
+          <p class="map-city">Москва</p>
+          <div class="map-views" aria-label="Вид карты">
+            <button type="button" id="map-overview" aria-controls="map-canvas" disabled>Весь охват</button>
+            <button type="button" id="map-demo" aria-controls="map-canvas" disabled>К демо-адресам</button>
+            <button type="button" id="building-types" aria-pressed="false" aria-controls="building-legend" disabled>Типы зданий</button>
+          </div>
+        </div>
+        <div class="map-frame">
+          <div id="map-canvas" role="region" aria-label="Интерактивная карта Москвы"></div>
+          <div class="map-loading" role="status">Загружаем карту…</div>
+          <div class="map-zoom" aria-label="Масштаб карты">
+            <button type="button" id="map-zoom-in" aria-label="Приблизить карту">+</button>
+            <button type="button" id="map-zoom-out" aria-label="Отдалить карту">−</button>
+          </div>
+          <div class="scenario-art map-fallback-art" aria-hidden="true">
+            <img src="mitino.webp" alt="" width="1100" height="810" loading="lazy">
+            <span class="map-title">От метро до квартала</span>
+            <span class="map-marker map-a pin pin-a">A</span>
+            <span class="map-marker map-b pin pin-b">B</span>
+            <span class="map-marker map-c pin pin-c">C</span>
+            <span class="map-metro"><span>М</span> Митино</span>
+          </div>
         </div>
         <figcaption>
-          <ul class="map-legend" aria-label="Расположение трёх адресов">
+          <p class="map-fallback-message" role="status">Карта недоступна. Показываем схему Митино. Сравнительный отчёт можно открыть как обычно.</p>
+          <div class="map-selection" id="map-selection" aria-live="polite">
+            <p>Выберите метку, чтобы увидеть адрес и индекс.</p>
+          </div>
+          <p class="building-hint" id="building-hint">Приблизьте карту, чтобы открыть карточку здания.</p>
+          <ul class="building-legend" id="building-legend" aria-label="Типы зданий по OpenStreetMap" hidden></ul>
+          <section class="building-card" id="building-card" aria-labelledby="building-address" hidden>
+            <div class="building-card-heading">
+              <h2 id="building-address"></h2>
+              <button type="button" id="building-close" aria-label="Закрыть карточку здания">×</button>
+            </div>
+            <dl id="building-facts"></dl>
+            <p id="building-source" class="building-source"></p>
+          </section>
+          <ul class="map-legend" aria-label="Типы расположения адресов">
             <li><span class="pin pin-a">A</span>У метро</li>
             <li><span class="pin pin-b">B</span>По пути к домам</li>
             <li><span class="pin pin-c">C</span>Внутри квартала</li>
           </ul>
-          <small>Схема по данным <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a></small>
+          <small class="map-credits">Москва · <a href="https://www.openstreetmap.org/copyright">© участники OpenStreetMap, ODbL</a> · <a href="map/SOURCES.md">О данных</a></small>
+          <small class="map-fallback-credit">Схема по данным <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a></small>
         </figcaption>
       </figure>
     </section>

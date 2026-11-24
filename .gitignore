@@ -1,0 +1,5 @@
+# Local map export pending verification of the source layers' redistribution terms.
+/map/basemap.pmtiles
+/map/*.pmtiles.tmp
+__pycache__/
+/.venv-map/
