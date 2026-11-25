@@ -1,10 +1,11 @@
 // «Дым» потоков и линии влияния на холсте поверх карты. Иллюстрация, не замер.
 import { buildPaths, spawnWeights, positionAt, particleBudget, bezier } from './smoke-math.mjs';
 
-const TRAIL = 9;
-const SPEED_SCALE = 22;
+const TRAIL = 7;
+const SPEED_SCALE = 12;
 const MAX_LINES = 40;
-const SMOKE = '255, 232, 178';
+const HUB = 30;
+const SMOKE = '255, 214, 150';
 const PLUS = '127, 214, 171';
 const MINUS = '232, 128, 96';
 
@@ -27,7 +28,8 @@ export function createSmoke(map, canvas, { segments, points, center, reducedMoti
     const fs = segments?.features ?? [];
     return fs.length ? fs.reduce((s, f) => s + (f.properties[p] ?? 0), 0) / fs.length : 0;
   };
-  let budget = paths.length ? particleBudget(mean(period)) : 0;
+  const softBudget = (p) => Math.round(particleBudget(mean(p)) * 0.8);
+  let budget = paths.length ? softBudget(period) : 0;
   const particles = [];
 
   function cumulate(w) {
@@ -52,7 +54,7 @@ export function createSmoke(map, canvas, { segments, points, center, reducedMoti
     p.s = Math.random() * path.length_m;
     p.speed = (1.1 + Math.random() * 0.5) * SPEED_SCALE;
     p.trail = [];
-    p.alpha = 0.35 + Math.random() * 0.45;
+    p.alpha = 0.28 + Math.random() * 0.3;
     return p;
   }
 
@@ -64,31 +66,43 @@ export function createSmoke(map, canvas, { segments, points, center, reducedMoti
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
+  // Линии влияния гаснут, не доходя до точки: вокруг неё остаётся тихое кольцо, а не яркая «звезда».
   function drawLines(now, animated) {
     const c = map.project([center.lon, center.lat]);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.strokeStyle = 'rgba(255, 230, 168, 0.45)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, HUB, 0, Math.PI * 2);
+    ctx.stroke();
     for (const line of lines) {
       if (hiddenKinds.includes(line.kind)) continue;
       const a = map.project([line.lon, line.lat]);
-      const lift = Math.min(120, Math.hypot(a.x - c.x, a.y - c.y) * 0.35);
+      const len = Math.hypot(a.x - c.x, a.y - c.y);
+      if (len < HUB * 1.6) continue;
+      const lift = Math.min(80, len * 0.3);
       const ctrl = { x: (a.x + c.x) / 2, y: (a.y + c.y) / 2 - lift };
+      const tEnd = Math.max(0.2, 1 - (HUB * 1.25) / len);
+      const end = bezier(a, ctrl, c, tEnd);
       const color = line.effect === 'minus' ? MINUS : PLUS;
       const hot = hotKinds.length === 0 || hotKinds.includes(line.kind);
-      const base = hotKinds.length === 0 ? 0.28 : hot ? 0.85 : 0.06;
-      ctx.strokeStyle = `rgba(${color}, ${base})`;
-      ctx.lineWidth = 0.8 + 3 * line.strength;
+      const base = hotKinds.length === 0 ? 0.4 : hot ? 0.85 : 0.06;
+      const g = ctx.createLinearGradient(a.x, a.y, end.x, end.y);
+      g.addColorStop(0, `rgba(${color}, ${base})`);
+      g.addColorStop(1, `rgba(${color}, ${base * 0.25})`);
+      ctx.strokeStyle = g;
+      ctx.lineWidth = 0.9 + 2.2 * line.strength;
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
-      ctx.quadraticCurveTo(ctrl.x, ctrl.y, c.x, c.y);
+      for (let k = 1; k <= 16; k++) { const q = bezier(a, ctrl, c, (k / 16) * tEnd); ctx.lineTo(q.x, q.y); }
       ctx.stroke();
       if (animated && hot) {
-        const t = ((now / 2500) + line.phase) % 1;
+        const t = (((now / 2800) + line.phase) % 1) * tEnd;
         const q = bezier(a, ctrl, c, t);
-        const g = ctx.createRadialGradient(q.x, q.y, 0, q.x, q.y, 7 + 5 * line.strength);
-        g.addColorStop(0, `rgba(${color}, 0.95)`);
-        g.addColorStop(1, `rgba(${color}, 0)`);
-        ctx.fillStyle = g;
+        const fade = Math.sqrt(1 - t / tEnd);
+        ctx.fillStyle = `rgba(${color}, ${0.75 * fade})`;
         ctx.beginPath();
-        ctx.arc(q.x, q.y, 7 + 5 * line.strength, 0, Math.PI * 2);
+        ctx.arc(q.x, q.y, 2.4 + 1.8 * line.strength, 0, Math.PI * 2);
         ctx.fill();
       }
     }
@@ -99,7 +113,7 @@ export function createSmoke(map, canvas, { segments, points, center, reducedMoti
   if (segments?.features?.length && !map.getSource('flow-glow')) {
     map.addSource('flow-glow', { type: 'geojson', data: segments });
     map.addLayer({ id: 'flow-glow', type: 'line', source: 'flow-glow', layout: { 'line-cap': 'round', 'line-join': 'round' },
-      paint: { 'line-color': '#ffd98a', 'line-width': glowWidth(period), 'line-blur': 8, 'line-opacity': 0.22,
+      paint: { 'line-color': '#ffd98a', 'line-width': glowWidth(period), 'line-blur': 8, 'line-opacity': 0.2,
         'line-width-transition': { duration: 600 } } }, 'city-3d');
   }
 
@@ -153,8 +167,8 @@ export function createSmoke(map, canvas, { segments, points, center, reducedMoti
         const q = p.trail[k];
         if (prev) {
           const f = k / p.trail.length;
-          ctx.strokeStyle = `rgba(${SMOKE}, ${p.alpha * f * 0.85})`;
-          ctx.lineWidth = 1 + 3.2 * f;
+          ctx.strokeStyle = `rgba(${SMOKE}, ${p.alpha * f * 0.75})`;
+          ctx.lineWidth = 1 + 2.2 * f;
           ctx.beginPath();
           ctx.moveTo(prev.x, prev.y);
           ctx.lineTo(q.x, q.y);
@@ -163,9 +177,9 @@ export function createSmoke(map, canvas, { segments, points, center, reducedMoti
         prev = q;
       }
       if (prev) {
-        ctx.fillStyle = `rgba(${SMOKE}, ${p.alpha * 0.8})`;
+        ctx.fillStyle = `rgba(${SMOKE}, ${p.alpha * 0.5})`;
         ctx.beginPath();
-        ctx.arc(prev.x, prev.y, 2.2, 0, Math.PI * 2);
+        ctx.arc(prev.x, prev.y, 1.7, 0, Math.PI * 2);
         ctx.fill();
       }
     }
@@ -189,7 +203,7 @@ export function createSmoke(map, canvas, { segments, points, center, reducedMoti
       if (next === period) return;
       fromWeights = weights;
       period = next;
-      budget = paths.length ? particleBudget(mean(period)) : 0;
+      budget = paths.length ? softBudget(period) : 0;
       blendStart = performance.now();
       if (map.getLayer('flow-glow')) map.setPaintProperty('flow-glow', 'line-width', glowWidth(period));
       if (reducedMotion) drawStatic();

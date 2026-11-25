@@ -22,7 +22,7 @@ const NIGHT = {
   'building-outlines': { 'line-color': '#2b4037' },
 };
 const HEIGHT = ['match', ['get', 'kind'], 'residential', 30, 'mixed', 24, 'commercial', 16, 'other', 12, 10];
-const MAX_MARKERS = 40;
+const MAX_MARKERS = 32;
 
 function circle(lon, lat, radius, steps = 96) {
   const dLat = radius / 111320;
@@ -116,7 +116,8 @@ export function showResult(view, card, { padding } = {}) {
   });
 
   const points = card.map.points;
-  const { shown, rest } = groupPoints(points);
+  // Объекты в самом здании (ближе 30 м) не рисуем меткой: они закрывали бы выбранное здание. В легенде они учтены.
+  const { shown, rest } = groupPoints(points.filter((p) => p.distance_m >= 30));
   const popup = new engine.Popup({ closeButton: false, closeOnClick: true, offset: 34, className: 'poi-tip', maxWidth: '240px' });
   const markers = shown.slice(0, MAX_MARKERS).map((p, i) => {
     const element = markerElement(p, i);
