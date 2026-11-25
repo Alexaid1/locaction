@@ -109,12 +109,13 @@ body[data-screen="result"] .sheet {
 
 @media (max-width: 860px) {
   body[data-screen="result"] .sheet {
-    top: auto; left: 0; right: 0; bottom: 0; width: 100%; max-height: 78svh; border-radius: 24px 24px 0 0;
-    animation: sheet-up .6s var(--ease);
+    top: auto; left: 0; right: 0; bottom: 0; width: 100%; max-height: 50svh; border-radius: 24px 24px 0 0;
+    animation: sheet-up .6s var(--ease); transition: max-height .45s var(--ease);
   }
+  body[data-screen="result"] .sheet:has(.rp[data-sheet="full"]) { max-height: 86svh; }
+  .rp-actions .secondary span { display: none; }
   .rp-handle { display: grid; place-items: center; justify-self: center; width: 60px; height: 22px; margin: -10px 0 -8px; padding: 0; border: 0; background: transparent; }
   .rp-handle span { width: 40px; height: 4px; border-radius: 2px; background: #c9cdb9; }
-  .rp[data-sheet="closed"] > :not(.rp-handle):not(.rp-head):not(.rp-top):not(.rp-banner) { display: none; }
   .rp-top { grid-template-columns: 104px 1fr; }
   .score { width: 104px; height: 104px; }
   .score-num strong, .fc-value strong { font-size: 2.1rem; }

@@ -8,6 +8,8 @@ import { icon } from './icons.mjs';
 import { mountQuestionnaire } from './questionnaire.mjs';
 import { mountResultPanel } from './result-panel.mjs';
 import { playCalculating, showResult } from './scene.mjs';
+import { mountCompare, renderBadge, store as compareStore } from './compare.mjs';
+import { API_BASE } from '../config.mjs';
 import * as client from '../api/client.mjs';
 
 const body = document.body;
@@ -242,6 +244,94 @@ const originalForm = app.screens.form;
 app.screens.form = (...args) => { if (body.dataset.screen === 'result') leaveResult(); return originalForm(...args); };
 const originalBack = app.screens.backToMap;
 app.screens.backToMap = () => { if (body.dataset.screen === 'result') leaveResult(); return originalBack(); };
+
+// --- разбор от ИИ ---
+const esc = (text) => String(text ?? '').replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch]);
+app.screens.explain = async (box, button) => {
+  if (!app.card) return;
+  box.hidden = false;
+  box.innerHTML = '<div class="shimmer"></div><div class="shimmer"></div>';
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  button.classList.add('is-busy');
+  try {
+    const result = await client.explain(app.card);
+    const column = (title, iconName, items, cls) => items.length ? `
+      <div class="ex-col ${cls}"><h4>${icon(iconName, 18)}${title}</h4>
+        <ul>${items.map((item, i) => `<li style="--i:${i}" data-indicators="${esc(item.indicator_ids.join(' '))}">${esc(item.text)}</li>`).join('')}</ul></div>` : '';
+    box.innerHTML = `
+      <h3>${icon('ai', 18)}Разбор</h3>
+      ${API_BASE === 'stub' ? '<p class="fc-note">Пример: в заглушке разбор собран по шаблону из чисел карточки</p>' : ''}
+      ${column('Сильное', 'check', result.strengths, 'ex-plus')}
+      ${column('Слабое', 'warning', result.weaknesses, 'ex-minus')}
+      ${column('Проверить на месте', 'pin', result.checks, 'ex-check')}`;
+    box.onpointerover = (event) => {
+      const id = event.target.closest('[data-indicators]')?.dataset.indicators.split(' ')[0];
+      app.scene?.highlight(id || null);
+    };
+    box.onpointerleave = () => app.scene?.highlight(null);
+  } catch (error) {
+    box.innerHTML = `<p class="q-error">${icon('warning', 18)}${esc(error.message || 'Разбор сейчас недоступен')}</p>`;
+  } finally {
+    button.classList.remove('is-busy');
+  }
+};
+
+// --- сравнение ---
+app.screens.addCompare = (card, button) => {
+  const list = compareStore.add(card);
+  renderBadge(true);
+  button.innerHTML = `${icon('check', 20)}<span>В сравнении</span>`;
+  toast(`Добавлено к сравнению: ${list.length} из 5`);
+};
+
+app.screens.compare = async () => {
+  if (body.dataset.screen === 'result') { app.lastResult = app.state; leaveResult(); }
+  popup.hide();
+  app.state = { screen: 'compare' };
+  save();
+  await setScreen('compare');
+  app.view?.setMode('form');
+  mountCompare(sheet, {
+    onOpen: (card) => {
+      app.pick = { lngLat: { lat: card.point.lat, lon: card.point.lon },
+        building: card.point.building ? { ...card.point.building, address: card.point.address } : null, street: null };
+      app.screens.result({ screen: 'result', point: app.pick.lngLat, building: app.pick.building, params: card.params });
+    },
+    onBack: () => (app.lastResult ? app.screens.result(app.lastResult) : goHome()),
+  });
+};
+
+// --- печать ---
+app.screens.print = () => {
+  const old = document.querySelector('.print-map');
+  old?.remove();
+  const done = () => { window.print(); };
+  const map = app.view?.map;
+  if (!map) return done();
+  map.once('render', () => {
+    try {
+      const base = map.getCanvas();
+      const out = document.createElement('canvas');
+      out.width = base.width;
+      out.height = base.height;
+      const ctx = out.getContext('2d');
+      ctx.drawImage(base, 0, 0);
+      const smoke = document.querySelector('#smoke');
+      if (smoke.width) ctx.drawImage(smoke, 0, 0, out.width, out.height);
+      const img = new Image();
+      img.className = 'print-map';
+      img.alt = 'Карта окружения точки';
+      img.src = out.toDataURL('image/jpeg', 0.86);
+      sheet.querySelector('.rp')?.prepend(img);
+      img.decode().catch(() => {}).then(done);
+    } catch {
+      done();
+    }
+  });
+  map.triggerRepaint();
+};
+window.addEventListener('afterprint', () => document.querySelector('.print-map')?.remove());
+renderBadge();
 
 app.ready = start();
 app.searchBox = searchBox;

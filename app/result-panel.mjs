@@ -31,7 +31,7 @@ function forecastHtml(f) {
 export function mountResultPanel(root, card, handlers) {
   const m = panelModel(card);
   root.innerHTML = `
-    <div class="rp" data-sheet="open">
+    <div class="rp" data-sheet="peek">
       <button class="rp-handle" type="button" data-action="sheet" aria-label="Свернуть или развернуть карточку"><span></span></button>
       ${m.banner ? `<p class="rp-banner">${icon('warning', 16)}${esc(m.banner)}</p>` : ''}
       <header class="rp-head">
@@ -101,7 +101,7 @@ export function mountResultPanel(root, card, handlers) {
       handlers.onPeriod?.(button.dataset.period);
     }
     const action = button.dataset.action;
-    if (action === 'sheet') panel.dataset.sheet = panel.dataset.sheet === 'open' ? 'closed' : 'open';
+    if (action === 'sheet') panel.dataset.sheet = panel.dataset.sheet === 'full' ? 'peek' : 'full';
     if (action === 'explain') handlers.onExplain?.(root.querySelector('.rp-explain'), button);
     if (action === 'add-compare') handlers.onCompare?.(button);
     if (action === 'print') handlers.onPrint?.();
