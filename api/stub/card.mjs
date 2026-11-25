@@ -1,8 +1,8 @@
-// Заглушка POST /v1/card: временный расчёт по OSM (демо-индекс v2) и иллюстрация потоков.
+// Заглушка POST /v1/card: временный расчёт по своему слою OSM (демо-индекс v2) и иллюстрация потоков.
 import { ApiError } from '../errors.mjs';
 import { inBounds } from '../bounds.mjs';
 import { categoryById } from './osm-categories.mjs';
-import { fetchOsm, RADIUS } from './overpass.mjs';
+import { loadOsm, RADIUS } from './osm-local.mjs';
 import { scorePlace, toObjects } from './demo-index.mjs';
 import { buildFlows } from './flows.mjs';
 import { sampleParts, validatedForecast } from './sample.mjs';
@@ -77,13 +77,13 @@ export function assemble(request, hints, parts, now) {
     map: { radius_m: RADIUS, points: parts.points },
     field_checks: FIELD_CHECKS,
     limits: parts.limits,
-    sources: [{ id: 'osm', name: 'OpenStreetMap', as_of: date, license: 'ODbL' }],
+    sources: [{ id: 'osm', name: 'OpenStreetMap', as_of: parts.snapshot ?? null, license: 'ODbL' }],
     explain: { available: true, price_rub: null },
   };
 }
 
 export async function stubCard(request, hints = {}, opts = {}) {
-  const { fetchImpl, timeoutMs = 12000, now = () => new Date() } = opts;
+  const { fetchImpl, timeoutMs = 12000, now = () => new Date(), loadOsm: load = loadOsm } = opts;
   checkRequest(request);
   const preview = opts.preview === undefined ? previewMode() : opts.preview;
   const { point, params } = request;
@@ -91,11 +91,11 @@ export async function stubCard(request, hints = {}, opts = {}) {
 
   let parts;
   try {
-    const elements = await fetchOsm(point.lat, point.lon, params.category_id, { timeoutMs, ...(fetchImpl && { fetchImpl }) });
+    const { elements, snapshot } = await load(point.lat, point.lon, { timeoutMs, ...(fetchImpl && { fetchImpl }) });
     const { place, points } = scorePlace(toObjects(elements), point, params.category_id, stations);
     parts = {
-      place, points,
-      engine: { kind: 'demo_index_v2', version: 'demo-v2', features_version: null, data_as_of: today(now) },
+      place, points, snapshot,
+      engine: { kind: 'demo_index_v2', version: 'demo-v2', features_version: null, data_as_of: snapshot },
       limits: ['Временный расчёт по OpenStreetMap, не модель', 'Выручка и аренда в расчёт не входят', 'Потоки - иллюстрация по улицам, не замер'],
     };
   } catch {

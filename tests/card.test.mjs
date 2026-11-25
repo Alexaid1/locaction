@@ -5,7 +5,6 @@ import { card as stubCard } from '../api/stub/index.mjs';
 import { scorePlace, toObjects } from '../api/stub/demo-index.mjs';
 import { buildFlows, localIntensity } from '../api/stub/flows.mjs';
 import { sampleCard } from '../api/stub/sample.mjs';
-import { fetchOsm } from '../api/stub/overpass.mjs';
 import { CATEGORIES } from '../api/stub/osm-categories.mjs';
 import { haversine } from '../app/search.mjs';
 import { assertValid } from './contract.mjs';
@@ -19,14 +18,14 @@ const params = (category_id) => ({ schema: 'locaction.params/1', category_id, fo
   audience: [], area_m2: null, ownership: null, source: 'form', raw_text: null, missing: ['format'] });
 const req = (category) => ({ point, building: { osm: 'way/31543627', unom: null }, params: params(category) });
 const hints = { roads, address: 'Дубравная улица, 36', kind: 'residential' };
-const fixtureFetch = (body) => async () => ({ ok: true, status: 200, json: async () => body });
-const opts = { fetchImpl: fixtureFetch(overpass), now: fixedNow, stations, preview: null };
+const opts = { loadOsm: async () => ({ elements: overpass.elements, snapshot: '2026-11-23' }), now: fixedNow, stations, preview: null };
 const objects = toObjects(overpass.elements);
 
 test('stub card from fixture is valid and uses demo index v2', async () => {
   const card = await stubCard(req('food.coffee'), hints, opts);
   assertValid('card', card);
   assert.equal(card.engine.kind, 'demo_index_v2');
+  assert.equal(card.engine.data_as_of, '2026-11-23');
   assert.equal(card.forecast.status, 'not_validated');
   assert.equal(card.forecast.probability, null);
   assert.equal(card.flows.status, 'illustration');
@@ -92,20 +91,14 @@ test('flows near the metro are stronger in the morning than far away', () => {
   assert.ok(near.length && far.length && avg(near) > avg(far));
 });
 
-test('overpass failure falls back to sample card within timeout', async () => {
+test('OSM layer failure falls back to sample card within timeout', async () => {
   const hang = () => new Promise(() => {});
   const t0 = Date.now();
-  const card = await stubCard(req('food.coffee'), hints, { ...opts, fetchImpl: hang, timeoutMs: 50 });
+  const { loadOsm, ...rest } = opts;
+  const card = await stubCard(req('food.coffee'), hints, { ...rest, fetchImpl: hang, timeoutMs: 50 });
   assert.ok(Date.now() - t0 < 1000);
   assert.equal(card.engine.kind, 'stub');
   assertValid('card', card);
-});
-
-test('overpass 429 on both mirrors is a failure', async () => {
-  let calls = 0;
-  const busy = async () => { calls++; return { ok: false, status: 429, json: async () => ({}) }; };
-  await assert.rejects(fetchOsm(point.lat, point.lon, 'food.coffee', { fetchImpl: busy, timeoutMs: 500 }));
-  assert.equal(calls, 2);
 });
 
 test('point outside Moscow is out_of_area', async () => {

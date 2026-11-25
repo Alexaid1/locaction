@@ -1,7 +1,7 @@
 // Иллюстрация потоков без модели: отрезки улиц вокруг точки с условной интенсивностью
 // утром, днём и вечером. Не замер и не расчёт модели потоков (flows.status = illustration).
 import { haversine } from '../../app/search.mjs';
-import { RADIUS } from './overpass.mjs';
+import { RADIUS } from './osm-local.mjs';
 
 const BASE = { path: 0.8, street: 0.7, arterial: 0.6, major: 0.5, access: 0.4 };
 const PIECE_M = 60;

@@ -2,7 +2,7 @@
 import { factors } from '../../methodology.mjs';
 import { categoryById } from './osm-categories.mjs';
 import { haversine, nearestMetro } from '../../app/search.mjs';
-import { RADIUS } from './overpass.mjs';
+import { RADIUS } from './osm-local.mjs';
 
 const factor = Object.fromEntries(factors.map((f) => [f.id, f]));
 
