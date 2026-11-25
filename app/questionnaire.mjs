@@ -74,11 +74,11 @@ export function mountQuestionnaire(root, { address, initial, parse, onSubmit }) 
           <div class="chips">${FORMATS.map(([value, text, ic]) => chip({ field: 'format', value, text, iconName: ic, pressed: form.format === value })).join('')}</div>
         </div>
         <div class="q-block" data-block="avg_check_rub">
-          <h3>${icon('wallet', 18)}Средний чек <output class="q-value">${checkSet ? `${form.avg_check_rub.toLocaleString('ru-RU')} ₽` : 'не указан'}</output></h3>
-          <input type="range" class="range ${checkSet ? '' : 'is-unset'}" data-range="check" min="100" max="5000" step="50" value="${form.avg_check_rub ?? 500}" aria-label="Средний чек, рублей">
+          <h3>${icon('wallet', 18)}Средний чек <output class="q-value">${checkSet ? `${esc(Number(form.avg_check_rub).toLocaleString('ru-RU'))} ₽` : 'не указан'}</output></h3>
+          <input type="range" class="range ${checkSet ? '' : 'is-unset'}" data-range="check" min="100" max="5000" step="50" value="${esc(form.avg_check_rub ?? 500)}" aria-label="Средний чек, рублей">
         </div>
         <div class="q-block" data-block="hours">
-          <h3>${icon('clock', 18)}Часы работы <output class="q-value">${hoursSet ? `${form.open}-${form.close}` : 'не указаны'}</output></h3>
+          <h3>${icon('clock', 18)}Часы работы <output class="q-value">${hoursSet ? `${esc(form.open)}-${esc(form.close)}` : 'не указаны'}</output></h3>
           <div class="dual ${hoursSet ? '' : 'is-unset'}">
             <input type="range" class="range" data-range="open" min="0" max="23" step="1" value="${hourOf(form.open) ?? 8}" aria-label="Открытие, час">
             <input type="range" class="range" data-range="close" min="1" max="24" step="1" value="${hourOf(form.close) ?? 22}" aria-label="Закрытие, час">
@@ -91,7 +91,7 @@ export function mountQuestionnaire(root, { address, initial, parse, onSubmit }) 
         </div>
         <details class="q-more" ${form.area_m2 || form.ownership ? 'open' : ''} data-block="area_m2">
           <summary>${icon('plus', 18)}Ещё: площадь и формат владения</summary>
-          <label class="q-area">${icon('area', 18)}<span>Площадь, м²</span><input type="number" min="1" max="10000" inputmode="numeric" data-input="area" value="${form.area_m2 ?? ''}"></label>
+          <label class="q-area">${icon('area', 18)}<span>Площадь, м²</span><input type="number" min="1" max="10000" inputmode="numeric" data-input="area" value="${esc(form.area_m2 ?? '')}"></label>
           <div class="chips" data-block="ownership">${OWNERSHIP.map(([value, text]) => chip({ field: 'ownership', value, text, pressed: form.ownership === value })).join('')}</div>
         </details>
       </div>`;

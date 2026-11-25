@@ -83,6 +83,7 @@ export async function goMap() {
 }
 
 export async function goHome() {
+  leaveResult();
   popup.hide();
   searchBox.clear();
   body.classList.remove('has-pick');
@@ -125,7 +126,7 @@ document.addEventListener('click', (event) => {
   const action = event.target.closest('[data-action]')?.dataset.action;
   if (!action) return;
   const map = app.view?.map;
-  if (action === 'home') { event.preventDefault(); if (body.dataset.screen === 'result') leaveResult(); goHome(); }
+  if (action === 'home') { event.preventDefault(); goHome(); }
   if (action === 'expand') goMap();
   if (action === 'collapse') goHome();
   if (action === 'zoom-in') map?.zoomIn();
@@ -146,6 +147,7 @@ shell.addEventListener('pointerdown', (event) => {
 });
 
 app.screens.backToMap = async () => {
+  leaveResult();
   if (!app.pick) return goMap();
   await goMap();
   await showPick(app.pick);
@@ -186,8 +188,13 @@ async function start() {
 const wide = () => matchMedia('(min-width: 861px)').matches;
 const scenePadding = () => (wide() ? { top: 80, right: 440, bottom: 40, left: 40 } : { top: 70, right: 20, bottom: Math.round(innerHeight * 0.45), left: 20 });
 
-function idle(map, ms = 2500) {
-  return new Promise((resolve) => { const t = setTimeout(resolve, ms); map.once('idle', () => { clearTimeout(t); resolve(); }); });
+// Ждём тайлы улиц вокруг точки, но не дольше ms: во время анимации кольца карта не бывает «idle».
+function tilesReady(map, ms = 1200) {
+  const end = performance.now() + ms;
+  return new Promise((resolve) => {
+    const check = () => (map.areTilesLoaded() || performance.now() > end ? resolve() : setTimeout(check, 100));
+    check();
+  });
 }
 
 app.screens.result = async (state = app.state) => {
@@ -198,6 +205,7 @@ app.screens.result = async (state = app.state) => {
   app.scene = null;
   app.state = { screen: 'result', point: pick.lngLat, building: pick.building, params: state.params };
   save();
+  const startedAt = Date.now();
   sheet.innerHTML = `<div class="rp rp-loading"><div class="calc-orb"></div><p>Считаем окружение…</p></div>`;
   await setScreen('result');
   body.classList.add('is-night');
@@ -207,11 +215,12 @@ app.screens.result = async (state = app.state) => {
   if (view) {
     view.select(pick);
     calc = playCalculating(view, pick.lngLat);
+    app.calc = calc;
     await view.flyTo(pick.lngLat, { zoom: 16.1, pitch: 50, bearing: -20, padding: scenePadding(), duration: 1200 });
-    await idle(view.map);
+    await tilesReady(view.map);
   }
   const request = { point: pick.lngLat, building: pick.building ? { osm: pick.building.osm, unom: pick.building.unom ?? null } : null, params: state.params };
-  const hints = { roads: view ? view.roadsNear(pick.lngLat, 800) : [], address: pick.building?.address ?? (pick.street ? `${pick.street}, рядом` : null), kind: pick.building?.kind ?? 'unknown' };
+  const hints = { roads: view ? view.roadsNear(pick.lngLat, 800) : [], address: pick.building?.address ?? (pick.street ? `${pick.street}, рядом` : null), kind: pick.building?.kind ?? 'unknown', startedAt };
   let card;
   try {
     card = await client.card(request, hints);
@@ -235,15 +244,15 @@ app.screens.result = async (state = app.state) => {
   renderStepper();
 };
 
+// Убрать 3D-сцену, «дым», кольцо и ночную тему при любом уходе с карточки.
 function leaveResult() {
   app.scene?.destroy();
   app.scene = null;
+  app.calc?.stop();
+  app.calc = null;
+  app.view?.map.getSource('ring')?.setData({ type: 'FeatureCollection', features: [] });
   body.classList.remove('is-night');
 }
-const originalForm = app.screens.form;
-app.screens.form = (...args) => { if (body.dataset.screen === 'result') leaveResult(); return originalForm(...args); };
-const originalBack = app.screens.backToMap;
-app.screens.backToMap = () => { if (body.dataset.screen === 'result') leaveResult(); return originalBack(); };
 
 // --- разбор от ИИ ---
 const esc = (text) => String(text ?? '').replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch]);
@@ -285,7 +294,8 @@ app.screens.addCompare = (card, button) => {
 };
 
 app.screens.compare = async () => {
-  if (body.dataset.screen === 'result') { app.lastResult = app.state; leaveResult(); }
+  if (body.dataset.screen === 'result') app.lastResult = app.state;
+  leaveResult();
   popup.hide();
   app.state = { screen: 'compare' };
   save();
@@ -341,6 +351,7 @@ app.sheet = sheet;
 // --- анкета ---
 app.screens.form = async (pick, params = app.state.params ?? null) => {
   if (!pick) return;
+  leaveResult();
   app.pick = pick;
   popup.hide();
   app.state = { screen: 'form', point: pick.lngLat, building: pick.building, params };

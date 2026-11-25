@@ -41,3 +41,10 @@ test('stub base uses the built-in stub', async () => {
   const { params } = await client.parse('аптека');
   assert.equal(params.category_id, 'retail.pharmacy');
 });
+
+test('real API: hanging server times out as network error', async () => {
+  const client = createClient('https://api.example', () => new Promise(() => {}), { timeoutMs: 50 });
+  const t0 = Date.now();
+  await assert.rejects(client.card({}), (e) => e.code === 'network');
+  assert.ok(Date.now() - t0 < 1000);
+});

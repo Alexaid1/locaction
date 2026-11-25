@@ -88,7 +88,7 @@ python tools/preview.py --port 8092
 
 ## Сборка публичной подложки и контуров
 
-Из корня репозитория в PowerShell, с Python 3.11–3.13:
+Из корня репозитория в PowerShell, с Python 3.11-3.13:
 
 ```powershell
 python -m venv .venv-map

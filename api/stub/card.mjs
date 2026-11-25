@@ -23,13 +23,10 @@ function hash(text) {
 
 const today = (now) => now().toISOString().slice(0, 10);
 
-async function loadStations() {
-  try {
-    const response = await fetch(METRO_URL);
-    return response.ok ? await response.json() : [];
-  } catch {
-    return [];
-  }
+let stationsCache = null;
+function loadStations() {
+  stationsCache ??= fetch(METRO_URL).then((r) => (r.ok ? r.json() : [])).catch(() => { stationsCache = null; return []; });
+  return stationsCache;
 }
 
 function previewMode() {
@@ -83,8 +80,11 @@ export function assemble(request, hints, parts, now) {
 }
 
 export async function stubCard(request, hints = {}, opts = {}) {
-  const { fetchImpl, timeoutMs = 12000, now = () => new Date(), loadOsm: load = loadOsm } = opts;
+  const { fetchImpl, now = () => new Date(), loadOsm: load = loadOsm } = opts;
   checkRequest(request);
+  // Срок отсчитывается от нажатия «Рассчитать» (hints.startedAt), а не от начала запроса.
+  const budget = opts.timeoutMs ?? 12000;
+  const timeoutMs = hints?.startedAt ? Math.max(300, budget - (Date.now() - hints.startedAt)) : budget;
   const preview = opts.preview === undefined ? previewMode() : opts.preview;
   const { point, params } = request;
   const stations = opts.stations ?? await loadStations();

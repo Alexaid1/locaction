@@ -11,7 +11,7 @@ const MESSAGES = {
   llm_failed: 'Разбор сейчас недоступен.',
 };
 
-export function createClient(base, fetchImpl = (...args) => fetch(...args)) {
+export function createClient(base, fetchImpl = (...args) => fetch(...args), { timeoutMs = 20000 } = {}) {
   if (base === 'stub') {
     let stub;
     const load = () => (stub ??= import('./stub/index.mjs'));
@@ -25,16 +25,23 @@ export function createClient(base, fetchImpl = (...args) => fetch(...args)) {
   const root = base.replace(/\/+$/, '');
   async function post(path, body) {
     let response;
+    let data;
+    const controller = new AbortController();
+    let timer;
+    const timeout = new Promise((_, reject) => { timer = setTimeout(() => { controller.abort(); reject(new Error('timeout')); }, timeoutMs); });
     try {
-      response = await fetchImpl(`${root}${path}`, {
+      response = await Promise.race([fetchImpl(`${root}${path}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify(body),
-      });
+        signal: controller.signal,
+      }), timeout]);
+      data = await Promise.race([response.json().catch(() => null), timeout]);
     } catch {
       throw new ApiError('network', MESSAGES.network);
+    } finally {
+      clearTimeout(timer);
     }
-    const data = await response.json().catch(() => null);
     if (!response.ok) {
       const { code = 'internal', message = MESSAGES.internal } = data?.error ?? {};
       throw new ApiError(code, message);

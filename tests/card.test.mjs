@@ -126,3 +126,11 @@ test('card id is stable for the same point and category', async () => {
   assert.equal(a.card_id, b.card_id);
   assert.notEqual(a.card_id, c.card_id);
 });
+
+test('stub respects the overall deadline started at submit', async () => {
+  const { loadOsm, ...rest } = opts;
+  const t0 = Date.now();
+  const card = await stubCard(req('food.coffee'), { ...hints, startedAt: Date.now() - 11800 }, { ...rest, fetchImpl: () => new Promise(() => {}) });
+  assert.ok(Date.now() - t0 < 1500, `${Date.now() - t0} ms`);
+  assert.equal(card.engine.kind, 'stub');
+});

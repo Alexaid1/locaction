@@ -73,7 +73,7 @@ const pad = (h, m = '00') => `${String(h).padStart(2, '0')}:${m ?? '00'}`;
 function hours(text) {
   let open, close;
   const words = text.match(/с\s*(\d{1,2})(?::(\d{2}))?\s*(?:ч\S*\s*)?до\s*(\d{1,2})(?::(\d{2}))?/u);
-  const clock = text.match(/(?<!\d)(\d{1,2}):(\d{2})\s*[-–]\s*(\d{1,2}):(\d{2})/u);
+  const clock = text.match(/(?<!\d)(\d{1,2}):(\d{2})\s*[-\u2013\u2014]\s*(\d{1,2}):(\d{2})/u);
   if (/круглосуточн|24\/7/u.test(text)) [open, close] = ['00:00', '24:00'];
   else if (words) [open, close] = [pad(words[1], words[2]), pad(words[3], words[4])];
   else if (clock) [open, close] = [pad(clock[1], clock[2]), pad(clock[3], clock[4])];
