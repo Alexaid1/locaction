@@ -6,6 +6,8 @@ import { encode, decode } from './state.mjs';
 import { morph } from './motion.mjs';
 import { icon } from './icons.mjs';
 import { mountQuestionnaire } from './questionnaire.mjs';
+import { mountResultPanel } from './result-panel.mjs';
+import { playCalculating, showResult } from './scene.mjs';
 import * as client from '../api/client.mjs';
 
 const body = document.body;
@@ -121,7 +123,7 @@ document.addEventListener('click', (event) => {
   const action = event.target.closest('[data-action]')?.dataset.action;
   if (!action) return;
   const map = app.view?.map;
-  if (action === 'home') { event.preventDefault(); goHome(); }
+  if (action === 'home') { event.preventDefault(); if (body.dataset.screen === 'result') leaveResult(); goHome(); }
   if (action === 'expand') goMap();
   if (action === 'collapse') goHome();
   if (action === 'zoom-in') map?.zoomIn();
@@ -177,6 +179,69 @@ async function start() {
   }
   renderStepper();
 }
+
+// --- карточка ---
+const wide = () => matchMedia('(min-width: 861px)').matches;
+const scenePadding = () => (wide() ? { top: 80, right: 440, bottom: 40, left: 40 } : { top: 70, right: 20, bottom: Math.round(innerHeight * 0.45), left: 20 });
+
+function idle(map, ms = 2500) {
+  return new Promise((resolve) => { const t = setTimeout(resolve, ms); map.once('idle', () => { clearTimeout(t); resolve(); }); });
+}
+
+app.screens.result = async (state = app.state) => {
+  const pick = app.pick ?? { lngLat: state.point, building: state.building ?? null, street: null };
+  if (!state.params?.category_id) return app.screens.form(pick, state.params);
+  app.pick = pick;
+  app.scene?.destroy();
+  app.scene = null;
+  app.state = { screen: 'result', point: pick.lngLat, building: pick.building, params: state.params };
+  save();
+  sheet.innerHTML = `<div class="rp rp-loading"><div class="calc-orb"></div><p>Считаем окружение…</p></div>`;
+  await setScreen('result');
+  body.classList.add('is-night');
+  const view = app.view;
+  view?.setMode('result');
+  let calc;
+  if (view) {
+    view.select(pick);
+    calc = playCalculating(view, pick.lngLat);
+    await view.flyTo(pick.lngLat, { zoom: 16.1, pitch: 50, bearing: -20, padding: scenePadding(), duration: 1200 });
+    await idle(view.map);
+  }
+  const request = { point: pick.lngLat, building: pick.building ? { osm: pick.building.osm, unom: pick.building.unom ?? null } : null, params: state.params };
+  const hints = { roads: view ? view.roadsNear(pick.lngLat, 800) : [], address: pick.building?.address ?? (pick.street ? `${pick.street}, рядом` : null), kind: pick.building?.kind ?? 'unknown' };
+  let card;
+  try {
+    card = await client.card(request, hints);
+  } catch (error) {
+    calc?.stop();
+    body.classList.remove('is-night');
+    toast(error.message || 'Не получилось посчитать. Попробуйте ещё раз.');
+    return app.screens.form(pick, state.params);
+  }
+  calc?.stop();
+  app.card = card;
+  if (view) app.scene = showResult(view, card, { padding: scenePadding() });
+  mountResultPanel(sheet, card, {
+    onHighlight: (id) => app.scene?.highlight(id),
+    onPeriod: (period) => app.scene?.setPeriod(period),
+    onExplain: (box, button) => app.screens.explain?.(box, button),
+    onCompare: (button) => app.screens.addCompare?.(card, button),
+    onPrint: () => app.screens.print?.(),
+    onNew: () => app.screens.backToMap(),
+  });
+  renderStepper();
+};
+
+function leaveResult() {
+  app.scene?.destroy();
+  app.scene = null;
+  body.classList.remove('is-night');
+}
+const originalForm = app.screens.form;
+app.screens.form = (...args) => { if (body.dataset.screen === 'result') leaveResult(); return originalForm(...args); };
+const originalBack = app.screens.backToMap;
+app.screens.backToMap = () => { if (body.dataset.screen === 'result') leaveResult(); return originalBack(); };
 
 app.ready = start();
 app.searchBox = searchBox;
