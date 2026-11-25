@@ -223,3 +223,90 @@ body[data-screen='form'] .sheet {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* анкета */
+.q { display: grid; gap: 18px; max-width: 760px; padding-bottom: 96px; }
+.q-address { display: flex; align-items: center; gap: 6px; }
+.q-title { font: 500 clamp(2rem, 3.4vw, 2.8rem)/1 var(--display); letter-spacing: -.04em; }
+.segmented { display: inline-flex; justify-self: start; gap: 4px; padding: 4px; border-radius: 14px; background: var(--fern); }
+.segmented button { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 6px 14px; border: 0; border-radius: 10px; background: transparent; color: var(--muted); font-weight: 650; transition: background .25s, color .25s, box-shadow .25s; }
+.segmented button[aria-selected='true'] { background: var(--surface); color: var(--green); box-shadow: 0 2px 6px #1c302826; }
+.q-pane { display: grid; gap: 18px; animation: fade .35s var(--ease); }
+@keyframes fade { from { opacity: 0; transform: translateY(6px); } }
+.q-block { display: grid; gap: 10px; border-radius: 16px; }
+.q-block h3, .q-parsed h3 { display: flex; align-items: center; gap: 8px; font-size: 1rem; }
+.q-block h3 .ic { color: var(--leaf); }
+.q-block.is-flash { animation: flash 1.2s var(--ease); }
+@keyframes flash { 30% { box-shadow: 0 0 0 6px #ecd49688; background: #ecd49633; } }
+.q-value { margin-left: auto; color: var(--green); font-weight: 700; font-variant-numeric: tabular-nums; }
+.groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.group {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-height: 92px; padding: 14px;
+  border: 1px solid var(--line); border-radius: 18px; background: var(--surface); color: var(--green); font-weight: 700; text-align: left;
+  transition: transform .2s var(--ease), border-color .2s, background .2s, box-shadow .2s;
+}
+.group:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.group[aria-pressed='true'] { background: var(--green); border-color: var(--green); color: #fff; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 10px; }
+.tiles:empty { display: none; }
+.tile {
+  display: grid; justify-items: center; gap: 8px; padding: 14px 8px 12px; border: 1px solid var(--line); border-radius: 16px;
+  background: var(--surface); color: var(--ink); font-size: .9rem; font-weight: 600; text-align: center;
+  animation: pop .38s var(--ease) both; animation-delay: calc(var(--i) * 30ms);
+  transition: transform .2s var(--ease), border-color .2s, background .2s;
+}
+.tile .ic { color: var(--leaf); }
+.tile:hover { transform: translateY(-2px); border-color: var(--leaf); }
+.tile[aria-pressed='true'] { background: var(--fern); border-color: var(--green); box-shadow: inset 0 0 0 1px var(--green); }
+@keyframes pop { from { opacity: 0; transform: scale(.85) translateY(8px); } }
+.q-details { display: grid; gap: 22px; padding-top: 4px; animation: fade .45s var(--ease); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 6px 14px 6px 10px; border: 1px solid var(--line);
+  border-radius: 999px; background: var(--surface); color: var(--ink); font-size: .92rem; font-weight: 600;
+  transition: background .2s, border-color .2s, color .2s, transform .15s;
+}
+.chip .ic { color: var(--leaf); }
+.chip:active { transform: scale(.97); }
+.chip[aria-pressed='true'] { background: var(--green); border-color: var(--green); color: #fff; }
+.chip[aria-pressed='true'] .ic { color: #fff; }
+.result-chip { animation: pop .35s var(--ease) both; animation-delay: calc(var(--i) * 45ms); }
+.result-chip.is-found { background: var(--fern); border-color: #b8ccb3; }
+.result-chip.is-missing { background: #fbf0cf; border-color: #e7cf8b; color: #6b5217; }
+.result-chip.is-missing .ic { color: #a77f1d; }
+.range { width: 100%; height: 28px; accent-color: var(--green); }
+.range.is-unset, .dual.is-unset .range { opacity: .55; }
+.dual { position: relative; height: 28px; }
+.dual .range { position: absolute; inset: 0; pointer-events: none; background: transparent; }
+.dual .range::-webkit-slider-thumb { pointer-events: auto; }
+.dual .range::-moz-range-thumb { pointer-events: auto; }
+.q-more summary { display: flex; align-items: center; gap: 8px; color: var(--green); font-weight: 650; cursor: pointer; list-style: none; }
+.q-more summary::-webkit-details-marker { display: none; }
+.q-more[open] { display: grid; gap: 12px; }
+.q-area { display: flex; align-items: center; gap: 10px; margin-top: 12px; color: var(--muted); }
+.q-area input { width: 120px; height: 40px; padding: 0 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.q-textarea textarea {
+  width: 100%; padding: 14px 16px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface);
+  font: inherit; line-height: 1.5; resize: vertical; box-shadow: var(--shadow);
+}
+.q-textarea textarea:focus { outline: 0; border-color: var(--leaf); box-shadow: 0 0 0 4px #3b756126, var(--shadow); }
+[data-pane='text'] > .button { justify-self: start; }
+.button.is-busy { pointer-events: none; }
+.button.is-busy .ic { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.q-parsed { display: grid; gap: 10px; }
+.q-hint { color: var(--muted); font-size: .9rem; }
+.q-error { display: flex; align-items: center; gap: 8px; color: var(--coral); }
+.shimmer { height: 84px; border-radius: 16px; background: linear-gradient(100deg, var(--fern) 30%, #f6f8f0 50%, var(--fern) 70%); background-size: 300% 100%; animation: shimmer 1.1s linear infinite; }
+@keyframes shimmer { to { background-position: -150% 0; } }
+.q-submit {
+  position: sticky; bottom: 0; display: flex; align-items: center; justify-content: flex-end; gap: 14px; margin-top: 4px;
+  padding: 14px 0 18px; background: linear-gradient(to top, var(--paper) 70%, transparent);
+}
+.q-need { display: flex; align-items: center; gap: 6px; color: #8a6a1c; font-weight: 600; }
+.q-submit .button { min-width: 200px; }
+@media (max-width: 860px) {
+  .groups { gap: 8px; }
+  .group { min-height: 80px; padding: 12px; font-size: .9rem; }
+  .q-submit .button { flex: 1; min-width: 0; }
+}

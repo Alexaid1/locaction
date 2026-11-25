@@ -5,6 +5,8 @@ import { mountBuildingPopup } from './building-popup.mjs';
 import { encode, decode } from './state.mjs';
 import { morph } from './motion.mjs';
 import { icon } from './icons.mjs';
+import { mountQuestionnaire } from './questionnaire.mjs';
+import * as client from '../api/client.mjs';
 
 const body = document.body;
 const $ = (selector) => document.querySelector(selector);
@@ -181,13 +183,27 @@ app.searchBox = searchBox;
 app.popup = popup;
 app.sheet = sheet;
 
-// Временный экран анкеты до задачи 5.
-app.screens.form ??= async (pick) => {
+// --- анкета ---
+app.screens.form = async (pick, params = app.state.params ?? null) => {
   if (!pick) return;
   app.pick = pick;
-  app.state = { screen: 'form', point: pick.lngLat, building: pick.building, params: null };
+  popup.hide();
+  app.state = { screen: 'form', point: pick.lngLat, building: pick.building, params };
   await setScreen('form');
   app.view?.setMode('form');
-  sheet.textContent = 'Анкета';
+  app.view?.select(pick);
+  app.view?.flyTo(pick.lngLat, { zoom: 17.4, pitch: 55, bearing: -25, duration: 1100 });
+  const address = pick.building?.address ?? (pick.street ? `${pick.street}, рядом` : 'Точка на карте');
+  mountQuestionnaire(sheet, {
+    address,
+    initial: params,
+    parse: (text) => client.parse(text),
+    onSubmit: (next) => {
+      app.state = { ...app.state, params: next };
+      save();
+      if (app.screens.result) app.screens.result(app.state); else toast('Карточка - в следующем шаге');
+    },
+  });
+  sheet.scrollTop = 0;
   save();
 };
