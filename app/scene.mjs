@@ -4,6 +4,7 @@ import { animate } from './map-view.mjs';
 import { reducedMotion } from './motion.mjs';
 import { distance } from './format.mjs';
 import { kindsFor } from './panel-model.mjs';
+import { createSmoke } from './smoke.mjs';
 
 const NIGHT = {
   paper: { 'background-color': '#0d1915' },
@@ -122,6 +123,10 @@ export function showResult(view, card, { padding } = {}) {
     'circle-radius': 3, 'circle-color': ['match', ['get', 'effect'], 'minus', '#e0795b', '#7fd6ab'], 'circle-opacity': 0.8,
     'circle-stroke-color': '#0d1915', 'circle-stroke-width': 1 } });
 
+  const smoke = createSmoke(map, document.querySelector('#smoke'), {
+    segments: card.flows.segments, points, center: point, reducedMotion: reducedMotion(),
+  });
+
   let orbiting = !reducedMotion();
   let last = performance.now();
   const stopOrbit = () => { orbiting = false; };
@@ -144,11 +149,13 @@ export function showResult(view, card, { padding } = {}) {
         el.classList.toggle('is-hot', kinds.includes(p.kind));
         el.classList.toggle('is-dim', kinds.length > 0 && !kinds.includes(p.kind));
       }
+      smoke.highlight(kinds);
       return kinds;
     },
-    setPeriod() {},
+    setPeriod(period) { smoke.setPeriod(period); },
     destroy() {
       alive = false;
+      smoke.destroy();
       orbiting = false;
       markers.forEach(({ marker }) => marker.remove());
       if (map.getLayer('poi-rest')) map.removeLayer('poi-rest');
