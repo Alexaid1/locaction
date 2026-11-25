@@ -23,6 +23,7 @@ REGISTRY = Registry().with_resources(
 PARSE = {'type': 'object', 'required': ['params'], 'additionalProperties': False,
          'properties': {'params': {'$ref': 'https://locaction/contract/params.schema.json'}}}
 NUMBER = re.compile(r'\d+(?:[.,]\d+)?')
+THOUSANDS = re.compile(r'(\d)[\s\u00a0\u202f](?=\d{3}(?!\d))')  # 15 000 -> 15000, но 36, 38 не склеивается
 
 
 def errors(kind: str, data) -> list[str]:
@@ -60,7 +61,7 @@ def card_numbers(card) -> set[str]:
             if 0 < value < 1:
                 found.add(f'{round(value * 100):g}')
         elif isinstance(value, str):
-            found.update(n.replace(',', '.') for n in NUMBER.findall(value))
+            found.update(f"{float(n.replace(',', '.')):g}" for n in NUMBER.findall(THOUSANDS.sub(r'\1', value)))
         elif isinstance(value, dict):
             for item in value.values():
                 walk(item)
@@ -74,7 +75,7 @@ def card_numbers(card) -> set[str]:
 def unknown_numbers(explain: dict, card: dict) -> list[str]:
     known = card_numbers(card)
     texts = [item['text'] for key in ('strengths', 'weaknesses', 'checks') for item in explain[key]]
-    seen = [n.replace(',', '.') for text in texts for n in NUMBER.findall(text.replace(' ', '').replace(' ', ''))]
+    seen = [n.replace(',', '.') for text in texts for n in NUMBER.findall(THOUSANDS.sub(r'\1', text))]
     return sorted({n for n in seen if f'{float(n):g}' not in known})
 
 
