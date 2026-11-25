@@ -30,3 +30,11 @@ test('stub explain points to indicators of the card', async () => {
   for (const item of [...ex.strengths, ...ex.weaknesses, ...ex.checks])
     for (const id of item.indicator_ids) assert.ok(ids.has(id), id);
 });
+
+test('stub explain says plainly when nothing is weak', async () => {
+  const card = example('card-not-validated.json');
+  card.place.indicators = card.place.indicators.map((i) => ({ ...i, effect: 'plus' }));
+  const ex = await stubExplain(card);
+  assert.equal(ex.weaknesses.length, 1);
+  assert.equal(ex.weaknesses[0].text, 'Явных слабых мест в окружении нет. На осмотре проверьте вход, витрину и аренду.');
+});

@@ -53,7 +53,7 @@ export async function explain(card) {
     const ids = forecast.drivers.map((d) => d.indicator_id);
     (forecast.probability >= forecast.baseline.category ? strengths : weaknesses).unshift(item(text, ids));
   }
-  if (!weaknesses.length && card.limits.length) weaknesses.push(item(card.limits[0], []));
+  if (!weaknesses.length) weaknesses.push(item('Явных слабых мест в окружении нет. На осмотре проверьте вход, витрину и аренду.', []));
 
   const checks = minus.filter((i) => CHECK[i.icon]).map((i) => item(CHECK[i.icon], [i.id]));
   for (const text of card.field_checks) if (checks.length < 4) checks.push(item(text, []));

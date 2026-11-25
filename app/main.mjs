@@ -102,11 +102,11 @@ async function showPick(pick, { fly = false } = {}) {
   body.classList.add('has-pick');
   if (app.view) {
     if (fly) {
-      await app.view.flyTo(pick.lngLat, { zoom: 17.2, pitch: 45 });
+      await app.view.flyTo(pick.lngLat, { zoom: 17.2, pitch: 45, padding: { top: 0, right: 0, bottom: 0, left: 0 } });
       const found = pick.building && app.view.buildingById(pick.building.osm);
       if (found) pick.building = { ...found, address: pick.building.address ?? found.address };
     } else if (app.view.map.getZoom() < 16) {
-      app.view.flyTo(pick.lngLat, { zoom: 17, pitch: 40, duration: 900 });
+      app.view.flyTo(pick.lngLat, { zoom: 17, pitch: 40, duration: 900, padding: { top: 0, right: 0, bottom: 0, left: 0 } });
     }
     app.view.select(pick);
   }
@@ -358,7 +358,9 @@ app.screens.form = async (pick, params = app.state.params ?? null) => {
   await setScreen('form');
   app.view?.setMode('form');
   app.view?.select(pick);
-  app.view?.flyTo(pick.lngLat, { zoom: 17.4, pitch: 55, bearing: -25, duration: 1100 });
+  // Сброс отступов камеры от экрана карточки: иначе на телефоне здание уезжает к краю полосы.
+  const narrow = matchMedia('(max-width: 860px)').matches;
+  app.view?.flyTo(pick.lngLat, { zoom: narrow ? 16.6 : 17.2, pitch: narrow ? 45 : 55, bearing: -25, duration: 1100, padding: { top: 0, right: 0, bottom: 0, left: 0 } });
   const address = pick.building?.address ?? (pick.street ? `${pick.street}, рядом` : 'Точка на карте');
   mountQuestionnaire(sheet, {
     address,

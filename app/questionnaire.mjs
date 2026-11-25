@@ -1,7 +1,7 @@
 // Экран «Что открываете?»: плитки категорий и чипы или свободный текст с разбором.
 import { CATEGORIES, GROUPS } from '../api/stub/osm-categories.mjs';
 import { icon } from './icons.mjs';
-import { AUDIENCE, DAYS, FORMATS, OWNERSHIP, canSubmit, emptyForm, formToParams, paramChips, paramsToForm } from './form-model.mjs';
+import { AUDIENCE, DAYS, OWNERSHIP, canSubmit, emptyForm, formToParams, formatsFor, paramChips, paramsToForm } from './form-model.mjs';
 
 const esc = (text) => String(text).replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch]);
 const hh = (n) => `${String(n).padStart(2, '0')}:00`;
@@ -71,18 +71,21 @@ export function mountQuestionnaire(root, { address, initial, parse, onSubmit }) 
       <div class="q-details" ${form.category_id ? '' : 'hidden'}>
         <div class="q-block" data-block="format">
           <h3>${icon('form', 18)}Формат</h3>
-          <div class="chips">${FORMATS.map(([value, text, ic]) => chip({ field: 'format', value, text, iconName: ic, pressed: form.format === value })).join('')}</div>
+          <div class="chips">${formatsFor(form.category_id).map(([value, text, ic]) => chip({ field: 'format', value, text, iconName: ic, pressed: form.format === value })).join('')}</div>
         </div>
         <div class="q-block" data-block="avg_check_rub">
           <h3>${icon('wallet', 18)}Средний чек <output class="q-value">${checkSet ? `${esc(Number(form.avg_check_rub).toLocaleString('ru-RU'))} ₽` : 'не указан'}</output></h3>
-          <input type="range" class="range ${checkSet ? '' : 'is-unset'}" data-range="check" min="100" max="5000" step="50" value="${esc(form.avg_check_rub ?? 500)}" aria-label="Средний чек, рублей">
+          ${checkSet ? `<div class="q-range"><input type="range" class="range" data-range="check" min="100" max="5000" step="50" value="${esc(form.avg_check_rub)}" aria-label="Средний чек, рублей">
+            <button type="button" class="q-reset" data-action="reset-check">Сбросить</button></div>`
+          : `<button type="button" class="chip q-set" data-action="set-check">${icon('plus', 18)}<span>Указать чек</span></button>`}
         </div>
         <div class="q-block" data-block="hours">
           <h3>${icon('clock', 18)}Часы работы <output class="q-value">${hoursSet ? `${esc(form.open)}-${esc(form.close)}` : 'не указаны'}</output></h3>
-          <div class="dual ${hoursSet ? '' : 'is-unset'}">
+          ${hoursSet ? `<div class="q-range"><div class="dual">
             <input type="range" class="range" data-range="open" min="0" max="23" step="1" value="${hourOf(form.open) ?? 8}" aria-label="Открытие, час">
             <input type="range" class="range" data-range="close" min="1" max="24" step="1" value="${hourOf(form.close) ?? 22}" aria-label="Закрытие, час">
-          </div>
+            </div><button type="button" class="q-reset" data-action="reset-hours">Сбросить</button></div>`
+          : `<button type="button" class="chip q-set" data-action="set-hours">${icon('plus', 18)}<span>Указать часы</span></button>`}
           <div class="chips">${DAYS.map(([value, text]) => chip({ field: 'days', value, text, pressed: hoursSet && form.days === value })).join('')}</div>
         </div>
         <div class="q-block" data-block="audience">
@@ -131,9 +134,13 @@ export function mountQuestionnaire(root, { address, initial, parse, onSubmit }) 
       return;
     }
     const { field, value } = target.dataset;
-    if (field === 'category_id') { form.category_id = value; form.source = parsed ? form.source : 'form'; renderForm(); paneForm.querySelector('.q-details')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    if (field === 'category_id') { form.category_id = value; if (!formatsFor(value).some(([id]) => id === form.format)) form.format = null; form.source = parsed ? form.source : 'form'; renderForm(); paneForm.querySelector('.q-details')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
     else if (field === 'format' || field === 'ownership') { form[field] = form[field] === value ? null : value; renderForm(); }
     else if (field === 'days') { form.days = value; if (!form.open) { form.open = '08:00'; form.close = '22:00'; } renderForm(); }
+    else if (target.dataset.action === 'set-check') { form.avg_check_rub = 500; renderForm(); paneForm.querySelector('[data-range="check"]')?.focus(); }
+    else if (target.dataset.action === 'reset-check') { form.avg_check_rub = null; renderForm(); }
+    else if (target.dataset.action === 'set-hours') { form.open = '08:00'; form.close = '22:00'; renderForm(); paneForm.querySelector('[data-range="open"]')?.focus(); }
+    else if (target.dataset.action === 'reset-hours') { form.open = null; form.close = null; renderForm(); }
     else if (field === 'audience') { if (form.audience.has(value)) form.audience.delete(value); else form.audience.add(value); renderForm(); }
     else if (target.dataset.action === 'parse') {
       const text = textarea.value.trim();

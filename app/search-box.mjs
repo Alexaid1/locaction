@@ -9,7 +9,7 @@ export function mountSearchBox(root, { onChoose, onFocus }) {
     <label class="search-field">
       ${icon('search', 20)}
       <span class="sr-only">Адрес в Москве</span>
-      <input type="search" autocomplete="off" spellcheck="false" placeholder="Улица и дом, например Дубравная 36"
+      <input type="search" autocomplete="off" spellcheck="false" placeholder="Улица и дом"
         role="combobox" aria-expanded="false" aria-controls="search-list" aria-autocomplete="list">
     </label>
     <ul class="search-list" id="search-list" role="listbox" hidden></ul>

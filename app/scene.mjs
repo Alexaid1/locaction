@@ -5,6 +5,7 @@ import { reducedMotion } from './motion.mjs';
 import { distance } from './format.mjs';
 import { kindsFor } from './panel-model.mjs';
 import { createSmoke } from './smoke.mjs';
+import { groupPoints, legendItems, KIND_INFO } from './poi-model.mjs';
 
 const NIGHT = {
   paper: { 'background-color': '#0d1915' },
@@ -76,15 +77,18 @@ export function playCalculating(view, point) {
   return { stop() { running = false; } };
 }
 
+const describe = (p) => `${KIND_INFO[p.kind]?.one ?? 'Объект'}${p.name ? `: ${p.name}` : ''}, ${distance(p.distance_m)}${p.count > 1 ? ` (ещё ${p.count - 1} рядом)` : ''}`;
+
 function markerElement(point, index) {
-  const el = document.createElement('div');
+  const el = document.createElement('button');
+  el.type = 'button';
   el.className = 'poi';
   el.dataset.kind = point.kind;
   el.dataset.effect = point.effect;
   el.style.setProperty('--i', index);
-  el.style.setProperty('--s', 0.75 + point.strength * 0.45);
-  el.innerHTML = `<span class="poi-dot">${icon(point.kind === 'competitor' ? 'competitor' : point.kind, 16)}</span>`;
-  el.title = `${point.name ?? ''}${point.name ? ' · ' : ''}${distance(point.distance_m)}`;
+  el.style.setProperty('--s', 0.8 + point.strength * 0.35);
+  el.setAttribute('aria-label', describe(point));
+  el.innerHTML = `<span class="poi-dot">${icon(point.kind, 16)}${point.count > 1 ? `<b class="poi-count">${point.count}</b>` : ''}</span>`;
   return el;
 }
 
@@ -112,19 +116,50 @@ export function showResult(view, card, { padding } = {}) {
   });
 
   const points = card.map.points;
-  const markers = points.slice(0, MAX_MARKERS).map((p, i) => {
-    const marker = new engine.Marker({ element: markerElement(p, i), anchor: 'bottom', pitchAlignment: 'viewport' })
-      .setLngLat([p.lon, p.lat]).addTo(map);
+  const { shown, rest } = groupPoints(points);
+  const popup = new engine.Popup({ closeButton: false, closeOnClick: true, offset: 34, className: 'poi-tip', maxWidth: '240px' });
+  const markers = shown.slice(0, MAX_MARKERS).map((p, i) => {
+    const element = markerElement(p, i);
+    element.addEventListener('click', (event) => {
+      event.stopPropagation();
+      popup.setLngLat([p.lon, p.lat]).setText(describe(p)).addTo(map);
+    });
+    const marker = new engine.Marker({ element, anchor: 'bottom', pitchAlignment: 'viewport' }).setLngLat([p.lon, p.lat]).addTo(map);
     return { marker, point: p };
   });
-  map.addSource('poi-rest', { type: 'geojson', data: { type: 'FeatureCollection', features: points.slice(MAX_MARKERS).map((p) => ({
+
+  // Легенда на карте: что значат метки, с переключателями по типам.
+  const hidden = new Set();
+  const legend = document.createElement('div');
+  legend.className = 'poi-legend';
+  legend.setAttribute('role', 'group');
+  legend.setAttribute('aria-label', 'Объекты на карте');
+  legend.innerHTML = legendItems(points).map((item) => `
+    <button type="button" class="poi-chip" data-kind="${item.kind}" data-effect="${item.kind === 'competitor' ? 'minus' : 'plus'}" aria-pressed="true">
+      ${icon(item.kind, 16)}<span>${item.label}</span><b>${item.count}</b></button>`).join('');
+  document.querySelector('#map-shell').append(legend);
+  const applyHidden = () => {
+    for (const { marker, point: p } of markers) marker.getElement().hidden = hidden.has(p.kind);
+    if (map.getLayer('poi-rest')) map.setFilter('poi-rest', ['!', ['in', ['get', 'kind'], ['literal', [...hidden]]]]);
+    smoke.hide([...hidden]);
+  };
+  legend.addEventListener('click', (event) => {
+    const chip = event.target.closest('.poi-chip');
+    if (!chip) return;
+    const on = chip.getAttribute('aria-pressed') !== 'true';
+    chip.setAttribute('aria-pressed', String(on));
+    if (on) hidden.delete(chip.dataset.kind); else hidden.add(chip.dataset.kind);
+    popup.remove();
+    applyHidden();
+  });
+  map.addSource('poi-rest', { type: 'geojson', data: { type: 'FeatureCollection', features: [...rest, ...shown.slice(MAX_MARKERS)].map((p) => ({
     type: 'Feature', properties: { effect: p.effect, kind: p.kind }, geometry: { type: 'Point', coordinates: [p.lon, p.lat] } })) } });
   map.addLayer({ id: 'poi-rest', type: 'circle', source: 'poi-rest', paint: {
     'circle-radius': 3, 'circle-color': ['match', ['get', 'effect'], 'minus', '#e0795b', '#7fd6ab'], 'circle-opacity': 0.8,
     'circle-stroke-color': '#0d1915', 'circle-stroke-width': 1 } });
 
   const smoke = createSmoke(map, document.querySelector('#smoke'), {
-    segments: card.flows.segments, points, center: point, reducedMotion: reducedMotion(),
+    segments: card.flows.segments, points: shown, center: point, reducedMotion: reducedMotion(),
   });
 
   let orbiting = !reducedMotion();
@@ -158,6 +193,8 @@ export function showResult(view, card, { padding } = {}) {
       smoke.destroy();
       orbiting = false;
       markers.forEach(({ marker }) => marker.remove());
+      popup.remove();
+      legend.remove();
       if (map.getLayer('poi-rest')) map.removeLayer('poi-rest');
       if (map.getSource('poi-rest')) map.removeSource('poi-rest');
       map.getSource('ring')?.setData({ type: 'FeatureCollection', features: [] });

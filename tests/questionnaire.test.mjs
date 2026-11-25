@@ -40,3 +40,11 @@ test('chips show found params and flag missing ones', () => {
   const none = paramChips({ ...example('parse-response.json').params, category_id: null, missing: ['category_id'] });
   assert.ok(none.some((c) => c.field === 'category_id' && c.missing && c.label === 'Тип бизнеса'));
 });
+
+test('formats depend on the business group', async () => {
+  const { formatsFor } = await import('../app/form-model.mjs');
+  assert.deepEqual(formatsFor('retail.pharmacy').map(([id]) => id), ['store', 'kiosk']);
+  assert.deepEqual(formatsFor('food.coffee').map(([id]) => id), ['takeaway', 'seating', 'kiosk']);
+  assert.deepEqual(formatsFor('services.pickup').map(([id]) => id), ['service_room', 'kiosk', 'pickup']);
+  assert.equal(formatsFor(null).length, 6);
+});

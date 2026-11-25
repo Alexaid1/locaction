@@ -61,6 +61,7 @@ export function mountResultPanel(root, card, handlers) {
               <span class="period-bar"><span style="--w:${Math.round(b.rel * 100)}%"></span></span>
             </button>`).join('')}
         </div>
+        <p class="fc-note">Полоска - поток у точки по сравнению с улицами рядом. Время суток меняет «дым» на карте.</p>
         ${m.flows.numbers ? `<p class="fc-note">${esc(m.flows.numbers)}</p>` : ''}
       </section>
       <section class="rp-rows">
@@ -80,8 +81,8 @@ export function mountResultPanel(root, card, handlers) {
       <footer class="rp-actions">
         <button type="button" class="button primary" data-action="explain">${icon('ai', 20)}<span>Разбор от ИИ</span></button>
         <button type="button" class="button secondary" data-action="add-compare" title="Добавить к сравнению">${icon('compare', 20)}<span>Сравнить</span></button>
-        <button type="button" class="icon-button" data-action="print" aria-label="Сохранить PDF">${icon('print', 20)}</button>
-        <button type="button" class="icon-button" data-action="new-point" aria-label="Новая точка">${icon('plus', 20)}</button>
+        <button type="button" class="icon-button" data-action="print" aria-label="Сохранить PDF" title="Сохранить PDF">${icon('print', 20)}</button>
+        <button type="button" class="icon-button" data-action="new-point" aria-label="Выбрать другую точку" title="Выбрать другую точку">${icon('pin', 20)}</button>
       </footer>
     </div>`;
 

@@ -36,7 +36,7 @@ a { color: var(--green); text-underline-offset: .2em; }
 :focus-visible { outline: 3px solid var(--leaf); outline-offset: 2px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .ic { display: block; flex: none; }
-.eyebrow { color: var(--leaf); font-size: .82rem; font-weight: 650; letter-spacing: .02em; }
+.eyebrow { color: var(--leaf); font-size: .86rem; font-weight: 650; letter-spacing: .02em; }
 
 /* шапка и шаги */
 .topbar {
@@ -51,7 +51,7 @@ a { color: var(--green); text-underline-offset: .2em; }
 .brand-mark { width: 16px; height: 16px; border: 4px solid currentColor; border-radius: 50% 50% 50% 2px; transform: rotate(-45deg); color: var(--green); }
 .stepper { display: flex; gap: 4px; margin-left: auto; }
 .stepper button {
-  display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 4px 12px 4px 5px;
+  display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 4px 12px 4px 5px;
   border: 0; border-radius: 999px; background: transparent; color: var(--muted); font-size: .9rem; font-weight: 600;
   transition: background .3s, color .3s;
 }
@@ -63,7 +63,7 @@ a { color: var(--green); text-underline-offset: .2em; }
 .stepper li.is-current .step-dot { background: var(--green); color: #fff; }
 body[data-screen='home'] .stepper { visibility: hidden; }
 .compare-badge {
-  display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 4px 12px; border: 1px solid var(--line);
+  display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 4px 12px; border: 1px solid var(--line);
   border-radius: 999px; background: var(--surface); color: var(--green); font-weight: 700;
 }
 .compare-badge.is-bump { animation: bump .5s var(--ease); }
@@ -99,7 +99,7 @@ main { position: relative; }
 .hero h1 { margin: 14px 0 16px; font: 500 clamp(3.1rem, 6.4vw, 6rem)/.95 var(--display); letter-spacing: -.06em; }
 .hero-lead { max-width: 34ch; color: var(--muted); font-size: clamp(1rem, 1.4vw, 1.15rem); }
 .hero-search { grid-column: 1; margin-top: 26px; position: relative; z-index: 45; }
-.hero-example { grid-column: 1; align-self: start; justify-self: start; margin-top: 14px; font-size: .92rem; }
+.hero-example { grid-column: 1; align-self: start; justify-self: start; display: inline-flex; align-items: center; min-height: 44px; margin-top: 6px; font-size: .95rem; }
 body:not([data-screen='home']) .hero > :not(.hero-search) { display: none; }
 body:not([data-screen='home']) .hero { min-height: 0; padding: 0; }
 
@@ -138,6 +138,8 @@ body:not([data-screen='home']):not([data-screen='map']) .hero-search { display: 
 .map-shell > .map { position: absolute; inset: 0; }
 .map-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
 body[data-map='fallback'] .map-fallback { display: block; }
+body[data-map='loading'] .map-fallback { display: block; filter: saturate(.5) blur(1.5px); opacity: .55; }
+body[data-map='loading'] .map-status { z-index: 2; font-weight: 600; color: var(--green); }
 body[data-map='fallback'] .map, body[data-map='fallback'] .map-tools, body[data-map='fallback'] .map-expand, body[data-map='fallback'] .map-hint { display: none; }
 .map-status { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); pointer-events: none; }
 body:not([data-map='loading']) .map-status { display: none; }
@@ -210,6 +212,7 @@ body[data-screen='form'] .sheet {
 @media (max-width: 860px) {
   :root { --top: 56px; }
   .step-label { display: none; }
+  .stepper li.is-current .step-label { display: inline; }
   .stepper button { padding: 4px; }
   .hero { display: block; min-height: 0; padding-top: calc(var(--top) + 20px); }
   .hero h1 { font-size: clamp(2.6rem, 12vw, 3.6rem); }
@@ -219,6 +222,11 @@ body[data-screen='form'] .sheet {
   body[data-screen='form'] .sheet { top: calc(var(--top) + 28svh); left: 0; padding: 18px 16px 32px; border-radius: 20px 20px 0 0; background: var(--paper); }
   .pick-card { left: 10px; right: 10px; bottom: 10px; width: auto; }
   .map-tools { top: calc(var(--top) + 96px); right: 10px; }
+}
+
+@media (max-width: 440px) {
+  body:not([data-screen='home']) .wordmark { font-size: 0; gap: 0; }
+  .topbar { gap: 8px; padding: 0 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -263,7 +271,7 @@ body[data-screen='form'] .sheet {
 .q-details { display: grid; gap: 22px; padding-top: 4px; animation: fade .45s var(--ease); }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip {
-  display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 6px 14px 6px 10px; border: 1px solid var(--line);
+  display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 6px 14px 6px 10px; border: 1px solid var(--line);
   border-radius: 999px; background: var(--surface); color: var(--ink); font-size: .92rem; font-weight: 600;
   transition: background .2s, border-color .2s, color .2s, transform .15s;
 }
@@ -301,9 +309,13 @@ body[data-screen='form'] .sheet {
 .shimmer { height: 84px; border-radius: 16px; background: linear-gradient(100deg, var(--fern) 30%, #f6f8f0 50%, var(--fern) 70%); background-size: 300% 100%; animation: shimmer 1.1s linear infinite; }
 @keyframes shimmer { to { background-position: -150% 0; } }
 .q-submit {
-  position: sticky; bottom: 0; display: flex; align-items: center; justify-content: flex-end; gap: 14px; margin-top: 4px;
-  padding: 14px 0 18px; background: linear-gradient(to top, var(--paper) 70%, transparent);
+  position: sticky; bottom: 0; z-index: 2; display: flex; align-items: center; justify-content: flex-end; gap: 14px; margin-top: 4px;
+  padding: 14px 0 18px; background: var(--paper); border-top: 1px solid var(--line); box-shadow: 0 -14px 18px -14px #1c302833;
 }
+.q-range { display: flex; align-items: center; gap: 12px; }
+.q-range > .range, .q-range > .dual { flex: 1; }
+.q-reset { min-height: 44px; padding: 0 6px; border: 0; background: none; color: var(--muted); font-size: .9rem; text-decoration: underline; text-underline-offset: .2em; }
+.q-set { justify-self: start; }
 .q-need { display: flex; align-items: center; gap: 6px; color: #8a6a1c; font-weight: 600; }
 .q-submit .button { min-width: 200px; }
 @media (max-width: 860px) {

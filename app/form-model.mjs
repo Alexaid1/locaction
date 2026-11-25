@@ -6,6 +6,17 @@ export const FORMATS = [
   ['takeaway', 'Навынос', 'coffee'], ['seating', 'С посадкой', 'canteen'], ['kiosk', 'Киоск', 'box'],
   ['store', 'Магазин', 'bag'], ['service_room', 'Кабинет', 'scissors'], ['pickup', 'Пункт выдачи', 'box'],
 ];
+const FORMATS_BY_GROUP = {
+  food: ['takeaway', 'seating', 'kiosk'],
+  retail: ['store', 'kiosk'],
+  services: ['service_room', 'kiosk', 'pickup'],
+};
+// Форматы, которые имеют смысл для группы категории (аптеке не нужен «Пункт выдачи»).
+export function formatsFor(categoryId) {
+  const allowed = FORMATS_BY_GROUP[categoryId?.split('.')[0]];
+  return allowed ? allowed.map((id) => FORMATS.find(([key]) => key === id)) : FORMATS;
+}
+
 export const AUDIENCE = [
   ['commuters', 'Едут к метро', 'metro'], ['residents', 'Жители рядом', 'residents'], ['office_workers', 'Офисы', 'office'],
   ['students', 'Студенты', 'student'], ['tourists', 'Туристы', 'tourist'], ['families', 'Семьи с детьми', 'family'],

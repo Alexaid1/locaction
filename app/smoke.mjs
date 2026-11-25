@@ -18,6 +18,7 @@ export function createSmoke(map, canvas, { segments, points, center, reducedMoti
   let blendStart = 0;
   let cumulative = cumulate(weights);
   let hotKinds = [];
+  let hiddenKinds = [];
   let alive = true;
   let raf = 0;
   let last = performance.now();
@@ -66,6 +67,7 @@ export function createSmoke(map, canvas, { segments, points, center, reducedMoti
   function drawLines(now, animated) {
     const c = map.project([center.lon, center.lat]);
     for (const line of lines) {
+      if (hiddenKinds.includes(line.kind)) continue;
       const a = map.project([line.lon, line.lat]);
       const lift = Math.min(120, Math.hypot(a.x - c.x, a.y - c.y) * 0.35);
       const ctrl = { x: (a.x + c.x) / 2, y: (a.y + c.y) / 2 - lift };
@@ -190,6 +192,10 @@ export function createSmoke(map, canvas, { segments, points, center, reducedMoti
       budget = paths.length ? particleBudget(mean(period)) : 0;
       blendStart = performance.now();
       if (map.getLayer('flow-glow')) map.setPaintProperty('flow-glow', 'line-width', glowWidth(period));
+      if (reducedMotion) drawStatic();
+    },
+    hide(kinds) {
+      hiddenKinds = kinds ?? [];
       if (reducedMotion) drawStatic();
     },
     highlight(kinds) {
