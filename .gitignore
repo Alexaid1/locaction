@@ -3,3 +3,4 @@
 /map/*.pmtiles.tmp
 __pycache__/
 /.venv-map/
+/.venv-tools/
