@@ -12,7 +12,8 @@ from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 PREFIX = '/locaction/'
-PUBLIC_FILES = {'index.html', 'styles.css', 'app.mjs', 'methodology.mjs', 'demo-data.json', 'mitino.webp'}
+PUBLIC_FILES = {'index.html', 'example.html', 'styles.css', 'app.mjs', 'config.mjs', 'methodology.mjs', 'demo-data.json', 'mitino.webp'}
+PUBLIC_DIRS = {'map', 'app', 'api', 'contract'}
 
 
 @lru_cache(maxsize=16)
@@ -37,7 +38,7 @@ class PreviewHandler(SimpleHTTPRequestHandler):
             return None
         parts = PurePosixPath(path.removeprefix(PREFIX)).parts
         if (not path.startswith(PREFIX) or any(part.startswith('.') for part in parts)
-                or (parts and not (parts[0] in PUBLIC_FILES or parts[0] == 'map'))):
+                or (parts and not (parts[0] in PUBLIC_FILES or parts[0] in PUBLIC_DIRS))):
             self.send_error(404)
             return None
         target = Path(self.translate_path(path))

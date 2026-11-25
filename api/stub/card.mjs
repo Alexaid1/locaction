@@ -1,12 +1,12 @@
 // Заглушка POST /v1/card: временный расчёт по OSM (демо-индекс v2) и иллюстрация потоков.
 import { ApiError } from '../errors.mjs';
+import { inBounds } from '../bounds.mjs';
 import { categoryById } from './osm-categories.mjs';
 import { fetchOsm, RADIUS } from './overpass.mjs';
 import { scorePlace, toObjects } from './demo-index.mjs';
 import { buildFlows } from './flows.mjs';
 import { sampleParts, validatedForecast } from './sample.mjs';
 
-export const BOUNDS = { minLat: 55.1, maxLat: 56.1, minLon: 36.8, maxLon: 38.0 };
 const METRO_URL = new URL('../../map/metro.json', import.meta.url);
 
 export const FIELD_CHECKS = [
@@ -41,8 +41,7 @@ function previewMode() {
 }
 
 export function checkRequest(request) {
-  const { lat, lon } = request?.point ?? {};
-  if (!(lat >= BOUNDS.minLat && lat <= BOUNDS.maxLat && lon >= BOUNDS.minLon && lon <= BOUNDS.maxLon)) {
+  if (!inBounds(request?.point)) {
     throw new ApiError('out_of_area', 'Пока считаем только Москву');
   }
   if (!categoryById.has(request.params?.category_id)) throw new ApiError('bad_params', 'Выберите тип бизнеса');
