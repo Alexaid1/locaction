@@ -1,0 +1,173 @@
+{
+ "source": "commercial-history data/reference/categories.csv, копия 2026-11-25",
+ "categories": [
+  {
+   "id": "food.restaurant",
+   "name_ru": "Рестораны",
+   "group": "food",
+   "group_ru": "Общепит"
+  },
+  {
+   "id": "food.cafe",
+   "name_ru": "Кафе",
+   "group": "food",
+   "group_ru": "Общепит"
+  },
+  {
+   "id": "food.coffee",
+   "name_ru": "Кофейни",
+   "group": "food",
+   "group_ru": "Общепит"
+  },
+  {
+   "id": "food.bar",
+   "name_ru": "Бары",
+   "group": "food",
+   "group_ru": "Общепит"
+  },
+  {
+   "id": "food.hookah",
+   "name_ru": "Кальянные",
+   "group": "food",
+   "group_ru": "Общепит"
+  },
+  {
+   "id": "food.fast_food",
+   "name_ru": "Быстрое питание",
+   "group": "food",
+   "group_ru": "Общепит"
+  },
+  {
+   "id": "food.canteen",
+   "name_ru": "Столовые",
+   "group": "food",
+   "group_ru": "Общепит"
+  },
+  {
+   "id": "food.bakery",
+   "name_ru": "Пекарни и кондитерские",
+   "group": "food",
+   "group_ru": "Общепит"
+  },
+  {
+   "id": "retail.supermarket",
+   "name_ru": "Супермаркеты",
+   "group": "retail",
+   "group_ru": "Розничная торговля"
+  },
+  {
+   "id": "retail.grocery",
+   "name_ru": "Продуктовые магазины",
+   "group": "retail",
+   "group_ru": "Розничная торговля"
+  },
+  {
+   "id": "retail.specialty_food",
+   "name_ru": "Специализированные продуктовые магазины",
+   "group": "retail",
+   "group_ru": "Розничная торговля"
+  },
+  {
+   "id": "retail.alcohol",
+   "name_ru": "Алкогольные магазины",
+   "group": "retail",
+   "group_ru": "Розничная торговля"
+  },
+  {
+   "id": "retail.pharmacy",
+   "name_ru": "Аптеки",
+   "group": "retail",
+   "group_ru": "Розничная торговля"
+  },
+  {
+   "id": "services.beauty",
+   "name_ru": "Салоны красоты и парикмахерские",
+   "group": "services",
+   "group_ru": "Услуги"
+  },
+  {
+   "id": "services.barbershop",
+   "name_ru": "Барбершопы",
+   "group": "services",
+   "group_ru": "Услуги"
+  },
+  {
+   "id": "services.nails",
+   "name_ru": "Ногтевые студии",
+   "group": "services",
+   "group_ru": "Услуги"
+  },
+  {
+   "id": "services.cosmetology",
+   "name_ru": "Косметология",
+   "group": "services",
+   "group_ru": "Услуги"
+  },
+  {
+   "id": "retail.clothing",
+   "name_ru": "Одежда и обувь",
+   "group": "retail",
+   "group_ru": "Розничная торговля"
+  },
+  {
+   "id": "retail.jewelry",
+   "name_ru": "Украшения и часы",
+   "group": "retail",
+   "group_ru": "Розничная торговля"
+  },
+  {
+   "id": "retail.cosmetics",
+   "name_ru": "Косметика и парфюмерия",
+   "group": "retail",
+   "group_ru": "Розничная торговля"
+  },
+  {
+   "id": "retail.electronics",
+   "name_ru": "Электроника и связь",
+   "group": "retail",
+   "group_ru": "Розничная торговля"
+  },
+  {
+   "id": "retail.tobacco",
+   "name_ru": "Табак и вейпы",
+   "group": "retail",
+   "group_ru": "Розничная торговля"
+  },
+  {
+   "id": "retail.pets",
+   "name_ru": "Товары для животных",
+   "group": "retail",
+   "group_ru": "Розничная торговля"
+  },
+  {
+   "id": "retail.other",
+   "name_ru": "Прочая розница",
+   "group": "retail",
+   "group_ru": "Розничная торговля"
+  },
+  {
+   "id": "services.bank",
+   "name_ru": "Банки и обмен валюты",
+   "group": "services",
+   "group_ru": "Услуги"
+  },
+  {
+   "id": "services.household",
+   "name_ru": "Бытовые услуги и ремонт",
+   "group": "services",
+   "group_ru": "Услуги"
+  },
+  {
+   "id": "services.pickup",
+   "name_ru": "Пункты выдачи",
+   "group": "services",
+   "group_ru": "Услуги"
+  },
+  {
+   "id": "services.other",
+   "name_ru": "Прочие услуги",
+   "group": "services",
+   "group_ru": "Услуги"
+  }
+ ]
+}

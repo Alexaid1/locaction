@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://locaction/contract/params.schema.json",
+  "title": "locaction.params/1 - параметры бизнеса из анкеты или свободного текста",
+  "description": "Это возвращает разбор LLM (POST /v1/parse) и это же собирает анкета. Модель v1 использует только category_id, остальные поля нужны для объяснений и следующих версий модели.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "category_id", "source", "missing"],
+  "properties": {
+    "schema": { "const": "locaction.params/1" },
+    "category_id": {
+      "description": "Категория из справочника commercial-history (data/reference/categories.csv), только листья. Копия - contract/categories.json. null допустим только в ответе /v1/parse (LLM не поняла тип); /v1/card требует категорию.",
+      "enum": [
+        null,
+        "food.restaurant", "food.cafe", "food.coffee", "food.bar", "food.hookah", "food.fast_food", "food.canteen", "food.bakery",
+        "retail.supermarket", "retail.grocery", "retail.specialty_food", "retail.alcohol", "retail.pharmacy",
+        "retail.clothing", "retail.jewelry", "retail.cosmetics", "retail.electronics", "retail.tobacco", "retail.pets", "retail.other",
+        "services.beauty", "services.barbershop", "services.nails", "services.cosmetology", "services.bank",
+        "services.household", "services.pickup", "services.other"
+      ]
+    },
+    "format": {
+      "description": "Формат точки. null - не указан.",
+      "enum": ["takeaway", "seating", "kiosk", "store", "service_room", "pickup", null]
+    },
+    "avg_check_rub": { "type": ["integer", "null"], "minimum": 0, "maximum": 1000000 },
+    "hours": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["open", "close", "days"],
+      "properties": {
+        "open": { "type": "string", "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$" },
+        "close": { "type": "string", "pattern": "^([01][0-9]|2[0-4]):[0-5][0-9]$" },
+        "days": { "enum": ["daily", "weekdays", "weekends"] }
+      }
+    },
+    "audience": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "enum": ["commuters", "residents", "office_workers", "students", "tourists", "families", "drivers"] }
+    },
+    "area_m2": { "type": ["number", "null"], "minimum": 1, "maximum": 10000 },
+    "ownership": { "enum": ["independent", "chain", "franchise", null] },
+    "source": { "enum": ["form", "text"], "description": "Откуда параметры: анкета или разбор текста LLM." },
+    "raw_text": { "type": ["string", "null"], "maxLength": 2000, "description": "Исходный текст пользователя, если source = text." },
+    "missing": {
+      "description": "Поля, которые пользователь не указал или LLM не смогла понять. Интерфейс подсвечивает их жёлтым.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "enum": ["category_id", "format", "avg_check_rub", "hours", "audience", "area_m2", "ownership"] }
+    }
+  }
+}

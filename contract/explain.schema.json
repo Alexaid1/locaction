@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://locaction/contract/explain.schema.json",
+  "title": "locaction.explain/1 - разбор карточки от LLM, ответ POST /v1/explain",
+  "description": "LLM получает только числа карточки. Сервер проверяет, что в тексте нет чисел, которых нет в карточке, и пишет результат в check.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "card_id", "strengths", "weaknesses", "checks", "check"],
+  "properties": {
+    "schema": { "const": "locaction.explain/1" },
+    "card_id": { "type": "string" },
+    "strengths": { "type": "array", "maxItems": 4, "items": { "$ref": "#/$defs/item" } },
+    "weaknesses": { "type": "array", "maxItems": 4, "items": { "$ref": "#/$defs/item" } },
+    "checks": { "type": "array", "maxItems": 5, "items": { "$ref": "#/$defs/item" }, "description": "Что проверить на осмотре" },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["numbers_ok", "unknown_numbers"],
+      "properties": {
+        "numbers_ok": { "type": "boolean" },
+        "unknown_numbers": { "type": "array", "items": { "type": "string" }, "description": "Числа из текста, которых нет в карточке. Если не пусто, разбор клиенту не показывается." }
+      }
+    }
+  },
+  "$defs": {
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "indicator_ids"],
+      "properties": {
+        "text": { "type": "string", "maxLength": 280 },
+        "indicator_ids": { "type": "array", "items": { "type": "string" }, "description": "На какие показатели карточки опирается пункт - интерфейс подсвечивает их на карте" }
+      }
+    }
+  }
+}

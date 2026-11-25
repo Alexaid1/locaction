@@ -1,0 +1,25 @@
+{
+  "params": {
+    "schema": "locaction.params/1",
+    "category_id": "food.coffee",
+    "format": "takeaway",
+    "avg_check_rub": 350,
+    "hours": {
+      "open": "07:00",
+      "close": "21:00",
+      "days": "daily"
+    },
+    "audience": [
+      "commuters",
+      "residents"
+    ],
+    "area_m2": null,
+    "ownership": null,
+    "source": "text",
+    "raw_text": "Кофейня навынос, чек около 350, с 7 до 21 без выходных, люди у метро и жители",
+    "missing": [
+      "area_m2",
+      "ownership"
+    ]
+  }
+}

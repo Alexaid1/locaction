@@ -1,0 +1,266 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://locaction/contract/card.schema.json",
+  "title": "locaction.card/1 - карточка точки, ответ POST /v1/card",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "card_id", "created_at", "point", "params", "engine", "place", "forecast", "flows", "map", "field_checks", "limits", "sources", "explain"],
+  "properties": {
+    "schema": { "const": "locaction.card/1" },
+    "card_id": { "type": "string", "minLength": 6, "maxLength": 64 },
+    "created_at": { "type": "string", "format": "date-time" },
+
+    "point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lat", "lon", "address", "building", "district", "adm_area"],
+      "properties": {
+        "lat": { "type": "number", "minimum": 55.1, "maximum": 56.1 },
+        "lon": { "type": "number", "minimum": 36.8, "maximum": 38.0 },
+        "address": { "type": ["string", "null"] },
+        "building": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["osm", "unom", "kind", "levels", "year"],
+          "properties": {
+            "osm": { "type": ["string", "null"], "description": "way/123 или relation/123" },
+            "unom": { "type": ["string", "null"] },
+            "kind": { "enum": ["residential", "commercial", "mixed", "other", "unknown"] },
+            "levels": { "type": ["integer", "null"], "minimum": 1 },
+            "year": { "type": ["integer", "null"], "minimum": 1700, "maximum": 2100 }
+          }
+        },
+        "district": { "type": ["string", "null"], "description": "Район, например «Митино»" },
+        "adm_area": { "type": ["string", "null"], "description": "Округ, например «СЗАО»" }
+      }
+    },
+
+    "params": { "$ref": "params.schema.json" },
+
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "version", "data_as_of"],
+      "properties": {
+        "kind": { "enum": ["stub", "demo_index_v2", "model"], "description": "stub - заглушка с примерными числами; demo_index_v2 - временный расчёт по OSM; model - ML-модель." },
+        "version": { "type": "string" },
+        "features_version": { "type": ["string", "null"], "description": "FEATURE_VERSION из commercial-history, например v1" },
+        "data_as_of": { "type": "string", "format": "date" }
+      }
+    },
+
+    "place": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["score", "indicators"],
+      "properties": {
+        "score": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["value", "percentile_city", "method"],
+          "properties": {
+            "value": { "type": "number", "minimum": 0, "maximum": 100 },
+            "percentile_city": { "type": ["number", "null"], "minimum": 0, "maximum": 100, "description": "Доля точек Москвы той же категории с оценкой ниже, в процентах" },
+            "method": { "enum": ["demo_index_v2", "model_v1"] }
+          }
+        },
+        "indicators": {
+          "type": "array",
+          "maxItems": 12,
+          "items": { "$ref": "#/$defs/indicator" }
+        }
+      }
+    },
+
+    "forecast": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "horizon_months", "probability", "interval", "baseline", "quality", "drivers", "message"],
+      "properties": {
+        "status": { "enum": ["validated", "not_validated", "unavailable"], "description": "validated - модель лучше базовых линий и откалибрована на отложенных данных. Только тогда probability не null." },
+        "horizon_months": { "const": 12 },
+        "probability": { "type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "Вероятность, что точка такого типа работает на этом месте через 12 мес." },
+        "interval": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["low", "high", "level"],
+          "properties": {
+            "low": { "type": "number", "minimum": 0, "maximum": 1 },
+            "high": { "type": "number", "minimum": 0, "maximum": 1 },
+            "level": { "type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1, "description": "Например 0.8 - 80% интервал" }
+          }
+        },
+        "baseline": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["city", "category"],
+          "properties": {
+            "city": { "type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "Доля работающих через 12 мес. по всему стрит-ритейлу Москвы" },
+            "category": { "type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "То же для категории params.category_id" }
+          }
+        },
+        "quality": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["roc_auc", "brier", "validated_on"],
+          "properties": {
+            "roc_auc": { "type": "number", "minimum": 0, "maximum": 1 },
+            "brier": { "type": "number", "minimum": 0, "maximum": 1 },
+            "validated_on": { "type": "string", "description": "Кратко, на чём проверено: «2024-2025, районы вне обучения»" }
+          }
+        },
+        "drivers": {
+          "type": "array",
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["indicator_id", "direction", "strength"],
+            "properties": {
+              "indicator_id": { "type": "string", "description": "id из place.indicators" },
+              "direction": { "enum": ["plus", "minus"] },
+              "strength": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          }
+        },
+        "message": { "type": ["string", "null"], "maxLength": 200, "description": "Короткая подпись для статуса not_validated или unavailable" }
+      }
+    },
+
+    "flows": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "label", "unit", "periods", "segments"],
+      "properties": {
+        "status": { "enum": ["estimate", "illustration", "unavailable"], "description": "estimate - расчёт модели потоков; illustration - рисунок по улицам без модели (заглушка); unavailable - нет." },
+        "label": { "type": "string", "description": "Всегда показывается рядом с потоками, например «оценка по окружению, не замер»" },
+        "unit": { "const": "people_per_hour" },
+        "periods": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "hours", "value", "low", "high", "percentile_city"],
+            "properties": {
+              "id": { "enum": ["morning", "day", "evening"] },
+              "hours": { "type": "string", "pattern": "^[0-2][0-9]-[0-2][0-9]$" },
+              "value": { "type": ["integer", "null"], "minimum": 0 },
+              "low": { "type": ["integer", "null"], "minimum": 0 },
+              "high": { "type": ["integer", "null"], "minimum": 0 },
+              "percentile_city": { "type": ["number", "null"], "minimum": 0, "maximum": 100 }
+            }
+          }
+        },
+        "segments": {
+          "description": "GeoJSON FeatureCollection отрезков улиц в радиусе map.radius_m. Свойства morning/day/evening - относительная интенсивность 0..1 для анимации.",
+          "type": ["object", "null"],
+          "required": ["type", "features"],
+          "properties": {
+            "type": { "const": "FeatureCollection" },
+            "features": {
+              "type": "array",
+              "maxItems": 2000,
+              "items": {
+                "type": "object",
+                "required": ["type", "geometry", "properties"],
+                "properties": {
+                  "type": { "const": "Feature" },
+                  "geometry": {
+                    "type": "object",
+                    "required": ["type", "coordinates"],
+                    "properties": { "type": { "const": "LineString" }, "coordinates": { "type": "array", "minItems": 2 } }
+                  },
+                  "properties": {
+                    "type": "object",
+                    "required": ["morning", "day", "evening"],
+                    "properties": {
+                      "morning": { "type": "number", "minimum": 0, "maximum": 1 },
+                      "day": { "type": "number", "minimum": 0, "maximum": 1 },
+                      "evening": { "type": "number", "minimum": 0, "maximum": 1 }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "map": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["radius_m", "points"],
+      "properties": {
+        "radius_m": { "type": "integer", "minimum": 100, "maximum": 2000 },
+        "points": {
+          "description": "Объекты влияния для карты. Только открытые источники (osm, mos_data). Объекты из 2ГИС сюда не попадают никогда - только счётчиками в indicators.",
+          "type": "array",
+          "maxItems": 150,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "kind", "name", "lat", "lon", "distance_m", "effect", "strength", "source"],
+            "properties": {
+              "id": { "type": "string" },
+              "kind": { "enum": ["metro", "stop", "competitor", "anchor", "office", "university", "residential"] },
+              "name": { "type": ["string", "null"] },
+              "lat": { "type": "number" },
+              "lon": { "type": "number" },
+              "distance_m": { "type": "integer", "minimum": 0 },
+              "effect": { "enum": ["plus", "minus", "neutral"] },
+              "strength": { "type": "number", "minimum": 0, "maximum": 1, "description": "Сила влияния для толщины линии" },
+              "source": { "enum": ["osm", "mos_data"] }
+            }
+          }
+        }
+      }
+    },
+
+    "field_checks": { "type": "array", "maxItems": 6, "items": { "type": "string", "maxLength": 160 } },
+    "limits": { "type": "array", "maxItems": 6, "items": { "type": "string", "maxLength": 200 } },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "as_of", "license"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "as_of": { "type": ["string", "null"] },
+          "license": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "explain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["available", "price_rub"],
+      "properties": {
+        "available": { "type": "boolean" },
+        "price_rub": { "type": ["integer", "null"], "minimum": 0, "description": "null - цена не показывается" }
+      }
+    }
+  },
+
+  "$defs": {
+    "indicator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "value", "unit", "zone", "percentile_city", "effect", "weight", "icon"],
+      "properties": {
+        "id": { "type": "string", "description": "Желательно имя признака из FEATURE_NAMES commercial-history (metro_dist_m, osm_same_400, pop_400...)" },
+        "label": { "type": "string", "maxLength": 40, "description": "Короткая подпись: «До метро», «Конкуренты»" },
+        "value": { "type": ["number", "boolean", "null"] },
+        "unit": { "enum": ["m", "count", "people", "m2", "year", "bool", "share"] },
+        "zone": { "enum": ["point", "r300", "r400", "r500", "r800", "walk5", "walk10"], "description": "Где считали: r400 - круг 400 м, walk5 - пешая зона 5 мин" },
+        "percentile_city": { "type": ["number", "null"], "minimum": 0, "maximum": 100, "description": "Насколько показатель лучше, чем у точек Москвы, с учётом направления: 80 = лучше 80%" },
+        "effect": { "enum": ["plus", "minus", "neutral"] },
+        "weight": { "type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "Доля в оценке места или важность для модели" },
+        "icon": { "enum": ["metro", "stop", "competitor", "anchor", "office", "university", "residents", "history", "building", "flow"] }
+      }
+    }
+  }
+}

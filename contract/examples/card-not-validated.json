@@ -1,0 +1,286 @@
+{
+  "schema": "locaction.card/1",
+  "card_id": "c_20261125_2b9e04",
+  "created_at": "2026-11-25T18:40:00+03:00",
+  "point": {
+    "lat": 55.84528,
+    "lon": 37.36114,
+    "address": "Дубравная улица, 36",
+    "building": {
+      "osm": "way/45631622",
+      "unom": "4469530",
+      "kind": "residential",
+      "levels": 17,
+      "year": 2004
+    },
+    "district": "Митино",
+    "adm_area": "СЗАО"
+  },
+  "params": {
+    "schema": "locaction.params/1",
+    "category_id": "food.coffee",
+    "format": "takeaway",
+    "avg_check_rub": 350,
+    "hours": {
+      "open": "07:00",
+      "close": "21:00",
+      "days": "daily"
+    },
+    "audience": [
+      "commuters",
+      "residents"
+    ],
+    "area_m2": null,
+    "ownership": null,
+    "source": "text",
+    "raw_text": "Кофейня навынос, чек около 350, с 7 до 21 без выходных, люди у метро и жители",
+    "missing": [
+      "area_m2",
+      "ownership"
+    ]
+  },
+  "engine": {
+    "kind": "demo_index_v2",
+    "version": "demo-v2",
+    "features_version": null,
+    "data_as_of": "2026-11-17"
+  },
+  "place": {
+    "score": {
+      "value": 72,
+      "percentile_city": null,
+      "method": "demo_index_v2"
+    },
+    "indicators": [
+      {
+        "id": "metro_dist_m",
+        "label": "До метро",
+        "value": 260,
+        "unit": "m",
+        "zone": "point",
+        "percentile_city": 81,
+        "effect": "plus",
+        "weight": 0.28,
+        "icon": "metro"
+      },
+      {
+        "id": "pop_400",
+        "label": "Жители рядом",
+        "value": 9400,
+        "unit": "people",
+        "zone": "r400",
+        "percentile_city": 74,
+        "effect": "plus",
+        "weight": 0.18,
+        "icon": "residents"
+      },
+      {
+        "id": "osm_same_400",
+        "label": "Конкуренты",
+        "value": 6,
+        "unit": "count",
+        "zone": "r400",
+        "percentile_city": 38,
+        "effect": "minus",
+        "weight": 0.22,
+        "icon": "competitor"
+      },
+      {
+        "id": "anchor_supermarket_400",
+        "label": "Супермаркеты",
+        "value": 2,
+        "unit": "count",
+        "zone": "r400",
+        "percentile_city": 70,
+        "effect": "plus",
+        "weight": 0.12,
+        "icon": "anchor"
+      },
+      {
+        "id": "stops_300",
+        "label": "Остановки",
+        "value": 4,
+        "unit": "count",
+        "zone": "r300",
+        "percentile_city": 63,
+        "effect": "plus",
+        "weight": 0.08,
+        "icon": "stop"
+      },
+      {
+        "id": "place_prev_businesses_40",
+        "label": "Смены арендаторов",
+        "value": 2,
+        "unit": "count",
+        "zone": "point",
+        "percentile_city": 55,
+        "effect": "neutral",
+        "weight": 0.12,
+        "icon": "history"
+      }
+    ]
+  },
+  "forecast": {
+    "status": "not_validated",
+    "horizon_months": 12,
+    "probability": null,
+    "interval": null,
+    "baseline": null,
+    "quality": null,
+    "drivers": [],
+    "message": "Модель проходит проверку на истории закрытий"
+  },
+  "flows": {
+    "status": "illustration",
+    "label": "иллюстрация по улицам, не замер",
+    "unit": "people_per_hour",
+    "periods": [
+      {
+        "id": "morning",
+        "hours": "07-10",
+        "value": null,
+        "low": null,
+        "high": null,
+        "percentile_city": null
+      },
+      {
+        "id": "day",
+        "hours": "10-17",
+        "value": null,
+        "low": null,
+        "high": null,
+        "percentile_city": null
+      },
+      {
+        "id": "evening",
+        "hours": "17-21",
+        "value": null,
+        "low": null,
+        "high": null,
+        "percentile_city": null
+      }
+    ],
+    "segments": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                37.3585,
+                55.8449
+              ],
+              [
+                37.3611,
+                55.8453
+              ],
+              [
+                37.364,
+                55.8458
+              ]
+            ]
+          },
+          "properties": {
+            "morning": 0.9,
+            "day": 0.4,
+            "evening": 0.7
+          }
+        },
+        {
+          "type": "Feature",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                37.3611,
+                55.8453
+              ],
+              [
+                37.3613,
+                55.847
+              ]
+            ]
+          },
+          "properties": {
+            "morning": 0.5,
+            "day": 0.3,
+            "evening": 0.6
+          }
+        }
+      ]
+    }
+  },
+  "map": {
+    "radius_m": 800,
+    "points": [
+      {
+        "id": "osm:node/1234567",
+        "kind": "metro",
+        "name": "Митино, вход 2",
+        "lat": 55.8458,
+        "lon": 37.364,
+        "distance_m": 260,
+        "effect": "plus",
+        "strength": 0.9,
+        "source": "osm"
+      },
+      {
+        "id": "osm:node/2345678",
+        "kind": "competitor",
+        "name": null,
+        "lat": 55.8447,
+        "lon": 37.3598,
+        "distance_m": 120,
+        "effect": "minus",
+        "strength": 0.6,
+        "source": "osm"
+      },
+      {
+        "id": "osm:way/3456789",
+        "kind": "anchor",
+        "name": "Супермаркет",
+        "lat": 55.8462,
+        "lon": 37.3605,
+        "distance_m": 170,
+        "effect": "plus",
+        "strength": 0.5,
+        "source": "osm"
+      }
+    ]
+  },
+  "field_checks": [
+    "Посчитайте прохожих у входа утром и вечером в будни",
+    "Пройдите от метро до двери: переходы, видимость вывески",
+    "Уточните аренду, мощность, воду и условия для вывески"
+  ],
+  "limits": [
+    "Выручка и аренда в расчёт не входят",
+    "Поток людей - оценка по окружению, не замер"
+  ],
+  "sources": [
+    {
+      "id": "osm",
+      "name": "OpenStreetMap",
+      "as_of": "2026-11-17",
+      "license": "ODbL"
+    },
+    {
+      "id": "mos_data",
+      "name": "Открытые данные Москвы",
+      "as_of": "2026-11-01",
+      "license": null
+    },
+    {
+      "id": "ghs_pop",
+      "name": "GHS-POP, население",
+      "as_of": "2025",
+      "license": "CC BY 4.0"
+    }
+  ],
+  "explain": {
+    "available": true,
+    "price_rub": null
+  }
+}
