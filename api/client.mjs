@@ -1,14 +1,9 @@
 // Единственная граница интерфейса с сервером расчёта. Контракт: contract/README.md.
 import { API_BASE } from '../config.mjs';
 import { unknownNumbers } from './numbers.mjs';
+import { ApiError } from './errors.mjs';
 
-export class ApiError extends Error {
-  constructor(code, message) {
-    super(message);
-    this.name = 'ApiError';
-    this.code = code;
-  }
-}
+export { ApiError };
 
 const MESSAGES = {
   network: 'Сервер недоступен. Проверьте интернет и попробуйте ещё раз.',

@@ -1,0 +1,109 @@
+[
+ {
+  "type": "Feature",
+  "properties": {
+   "kind": "street"
+  },
+  "geometry": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     37.3444366,
+     55.8457687
+    ],
+    [
+     37.355637,
+     55.8457687
+    ],
+    [
+     37.3668374,
+     55.8457687
+    ]
+   ]
+  }
+ },
+ {
+  "type": "Feature",
+  "properties": {
+   "kind": "path"
+  },
+  "geometry": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     37.356117,
+     55.8401991
+    ],
+    [
+     37.356117,
+     55.845589
+    ],
+    [
+     37.356117,
+     55.8509789
+    ]
+   ]
+  }
+ },
+ {
+  "type": "Feature",
+  "properties": {
+   "kind": "arterial"
+  },
+  "geometry": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     37.3460367,
+     55.8428941
+    ],
+    [
+     37.3652373,
+     55.8428941
+    ]
+   ]
+  }
+ },
+ {
+  "type": "Feature",
+  "properties": {
+   "kind": "access"
+  },
+  "geometry": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     37.3572371,
+     55.8464873
+    ],
+    [
+     37.3596371,
+     55.8464873
+    ],
+    [
+     37.3596371,
+     55.8478348
+    ]
+   ]
+  }
+ },
+ {
+  "type": "Feature",
+  "properties": {
+   "kind": "major"
+  },
+  "geometry": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     37.3796378,
+     55.8590637
+    ],
+    [
+     37.3876381,
+     55.8590637
+    ]
+   ]
+  }
+ }
+]
