@@ -32,7 +32,6 @@ export function mountBuildingPopup(root, { onConfirm, onClose }) {
       const model = popupModel(pick, stations);
       root.innerHTML = `
         <button class="icon-button pick-close" type="button" data-action="close" aria-label="Закрыть">${icon('close', 18)}</button>
-        <p class="eyebrow">Выбранная точка</p>
         <h2 class="pick-title"></h2>
         <ul class="pick-rows"></ul>
         <button class="button primary wide" type="button" data-action="confirm">${icon('check', 20)}<span>Подтвердить</span></button>`;

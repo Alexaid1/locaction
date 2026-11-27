@@ -19,8 +19,8 @@ export function mountQuestionnaire(root, { address, initial, parse, onSubmit }) 
 
   root.innerHTML = `
     <div class="q">
-      <p class="eyebrow q-address">${icon('pin', 16)}<span></span></p>
       <h2 class="q-title">Что открываете?</h2>
+      <p class="meta q-address">${icon('pin', 16)}<span></span></p>
       <div class="segmented" role="tablist">
         <button type="button" role="tab" data-tab="form">${icon('form', 18)}Анкета</button>
         <button type="button" role="tab" data-tab="text">${icon('text', 18)}Своими словами</button>

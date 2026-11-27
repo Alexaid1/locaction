@@ -52,7 +52,7 @@ test('row values are formatted in Russian', () => {
 test('title, subtitle and score ring', () => {
   const m = panelModel(validatedCard);
   assert.equal(m.title, 'Дубравная улица, 36');
-  assert.equal(m.subtitle, 'Кофейня · навынос');
+  assert.equal(m.subtitle, 'Кофейня, навынос');
   assert.deepEqual(m.score, { value: 72, ring: 0.72, percentile: 68 });
 });
 

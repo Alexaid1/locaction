@@ -35,8 +35,8 @@ export function mountResultPanel(root, card, handlers) {
       <button class="rp-handle" type="button" data-action="sheet" aria-label="Свернуть или развернуть карточку"><span></span></button>
       ${m.banner ? `<p class="rp-banner">${icon('warning', 16)}${esc(m.banner)}</p>` : ''}
       <header class="rp-head">
-        <p class="eyebrow">${esc(m.subtitle)}</p>
         <h2 class="rp-title">${esc(m.title)}</h2>
+        <p class="meta">${esc(m.subtitle)}</p>
       </header>
       <section class="rp-top">
         <div class="score" role="img" aria-label="Оценка места ${m.score?.value ?? 'нет'} из 100">
@@ -75,7 +75,7 @@ export function mountResultPanel(root, card, handlers) {
               ${r.bar === null ? '' : `<span class="row-bar" title="Лучше, чем у ${Math.round(r.bar * 100)}% точек Москвы"><span style="--w:${Math.round(r.bar * 100)}%"></span></span>`}
             </li>`).join('')}
         </ul>
-        <p class="fc-note">${icon('competitor', 14)}мешает · ${icon('anchor', 14)}помогает · ${esc(m.method)}</p>
+        <p class="fc-note">Красное мешает, зелёное помогает. Расчёт: ${esc(m.method)}.</p>
       </section>
       <section class="rp-explain" hidden></section>
       <footer class="rp-actions">

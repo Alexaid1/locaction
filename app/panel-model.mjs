@@ -62,7 +62,7 @@ export function panelModel(card) {
   const score = card.place.score;
   return {
     title: card.point.address ?? 'Точка на карте',
-    subtitle: [category?.label, format?.toLowerCase()].filter(Boolean).join(' · '),
+    subtitle: [category?.label, format?.toLowerCase()].filter(Boolean).join(', '),
     banner,
     score: score ? { value: score.value, ring: score.value / 100, percentile: score.percentile_city } : null,
     method: score?.method === 'model_v1' ? 'модель LOCACTION' : 'демо-индекс v2',

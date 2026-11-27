@@ -28,8 +28,8 @@ export function mountCompare(root, { onOpen, onBack }) {
         <div class="cmp-grid">
           ${rows.map((r, i) => `
             <article class="cmp-card" style="--i:${i}">
-              <p class="eyebrow">${esc(categoryById.get(r.category)?.label ?? '')}</p>
               <h3>${esc(r.address)}</h3>
+              <p class="meta">${esc(categoryById.get(r.category)?.label ?? '')}</p>
               <div class="cmp-score" style="--v:${r.score ?? 0}"><strong>${r.score ?? '-'}</strong><span>оценка</span></div>
               <p class="cmp-fc">${icon('clock', 16)}${r.forecast === null ? 'Прогноз пока недоступен' : `Проработает год: <strong>${r.forecast}%</strong>`}</p>
               <ul>${r.top.map((t) => `<li data-effect="${t.effect}">${icon(t.icon, 16)}<span>${esc(t.label)}</span><strong>${esc(t.value)}</strong></li>`).join('')}</ul>

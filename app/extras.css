@@ -1,26 +1,26 @@
 /* Разбор от ИИ, сравнение, печать. */
-.rp-explain { display: grid; gap: 12px; padding: 14px; border-radius: 18px; background: #f3f1e6; animation: fade .4s var(--ease); }
+.rp-explain { display: grid; gap: 12px; padding: 14px; border-radius: 18px; background: var(--explain-bg); animation: fade .4s var(--ease); }
 .rp-explain .shimmer { height: 56px; }
 .ex-col { display: grid; gap: 6px; }
 .ex-col h4 { display: flex; align-items: center; gap: 6px; font-size: .9rem; }
 .ex-plus h4 { color: var(--leaf); }
-.ex-minus h4 { color: #a84a2c; }
-.ex-check h4 { color: #8a6a1c; }
+.ex-minus h4 { color: var(--minus-ink); }
+.ex-check h4 { color: var(--warn-ink-2); }
 .ex-col ul { display: grid; gap: 6px; }
 .ex-col li {
   padding: 8px 10px; border-radius: 12px; background: var(--surface); font-size: .9rem; line-height: 1.4;
   animation: fade .4s var(--ease) both; animation-delay: calc(var(--i) * 80ms); transition: background .2s;
 }
-.ex-col li:hover { background: #fff6e0; }
+.ex-col li:hover { background: var(--amber-bg); }
 
 body[data-screen="compare"] .sheet {
   position: fixed; inset: var(--top) 0 0 0; z-index: 40; overflow: auto; padding: 24px clamp(16px, 4vw, 48px) 40px;
-  background: #f7f3e8ee; animation: fade .4s var(--ease);
+  background: var(--c-f7f3e8ee); animation: fade .4s var(--ease);
 }
 .cmp { display: grid; gap: 18px; max-width: 1240px; margin-inline: auto; }
 .cmp-head { display: flex; align-items: center; gap: 14px; }
 .cmp-count { margin-left: auto; color: var(--muted); font-weight: 650; }
-.cmp-empty { display: flex; align-items: center; gap: 10px; padding: 24px; border: 1.5px dashed #c9cdb9; border-radius: 18px; color: var(--muted); }
+.cmp-empty { display: flex; align-items: center; gap: 10px; padding: 24px; border: 1.5px dashed var(--dash); border-radius: 18px; color: var(--muted); }
 .cmp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
 .cmp-card {
   display: grid; align-content: start; gap: 10px; padding: 18px; border-radius: 20px; background: var(--surface); box-shadow: var(--shadow);
@@ -31,25 +31,25 @@ body[data-screen="compare"] .sheet {
   display: grid; place-content: center; width: 92px; height: 92px; border-radius: 50%; text-align: center; line-height: 1;
   background: radial-gradient(closest-side, var(--surface) 78%, transparent 80% 100%), conic-gradient(var(--leaf) calc(var(--v) * 1%), var(--fern) 0);
 }
-.cmp-score strong { font: 500 1.9rem/1 var(--display); color: var(--green); }
+.cmp-score strong { font: 500 1.9rem/1 var(--display); color: var(--green); font-variant-numeric: tabular-nums; }
 .cmp-score span { color: var(--muted); font-size: .72rem; }
 .cmp-fc { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: .88rem; }
 .cmp-fc strong { color: var(--green); }
 .cmp-card ul { display: grid; gap: 6px; }
 .cmp-card li { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; align-items: center; gap: 8px; font-size: .88rem; }
 .cmp-card li .ic { color: var(--leaf); }
-.cmp-card li[data-effect="minus"] .ic, .cmp-card li[data-effect="minus"] strong { color: #a84a2c; }
+.cmp-card li[data-effect="minus"] .ic, .cmp-card li[data-effect="minus"] strong { color: var(--minus-ink); }
 .cmp-actions { display: flex; gap: 8px; margin-top: 4px; }
 .cmp-actions .button { flex: 1; min-height: 44px; }
 
 .print-map { display: none; }
 @media print {
   @page { size: A4; margin: 14mm; }
-  body, body.is-night { background: #fff; }
+  body, body.is-night { background: var(--white); }
   .topbar, .map-shell, .hero, .toast, .rp-actions, .rp-handle, .compare-badge { display: none !important; }
-  body[data-screen="result"] .sheet { position: static; width: auto; max-height: none; overflow: visible; box-shadow: none; background: #fff; animation: none; }
+  body[data-screen="result"] .sheet { position: static; width: auto; max-height: none; overflow: visible; box-shadow: none; background: var(--white); animation: none; }
   .rp { padding: 0; }
   .print-map { display: block; width: 100%; border-radius: 12px; }
-  .rp-explain { background: #f7f5ee; }
+  .rp-explain { background: var(--c-f7f5ee); }
   .row, .poi-dot, .ex-col li, .period-bar span, .row-bar span { animation: none !important; }
 }
